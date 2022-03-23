@@ -3,7 +3,7 @@ import { Entity } from '../../core/domain/Entity';
 type EntryProps = {
   entryId: number;
   value: number;
-  date: string;
+  date: Date;
   subCategoryId: number;
   comment: string;
 };
