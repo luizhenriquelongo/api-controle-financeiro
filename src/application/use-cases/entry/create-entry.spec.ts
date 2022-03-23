@@ -1,8 +1,13 @@
+import { InMemoryEntriesRepository } from '../../../../tests/repositories/in-memory-entries-repository';
 import { CreateEntryUseCase } from './create-entry';
 
 describe('Create entry use case', () => {
   it('should be able to create a new entry use case', async () => {
-    const useCase = new CreateEntryUseCase();
+    const repository = new InMemoryEntriesRepository();
+
+    const useCase = new CreateEntryUseCase(repository);
+
+    expect(repository.items.length).toBe(0);
 
     const response = await useCase.execute({
       entryId: 1,
@@ -13,5 +18,6 @@ describe('Create entry use case', () => {
     });
 
     expect(response).toBeTruthy();
+    expect(repository.items.length).toBe(1);
   });
 });

@@ -1,6 +1,6 @@
 import { Entity } from '../../core/domain/Entity';
 
-type EntryProps = {
+export type EntryProps = {
   entryId: number;
   value: number;
   date: Date;

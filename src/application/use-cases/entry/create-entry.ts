@@ -1,4 +1,5 @@
-import { EntryEntity } from '../../domain/entities/entry';
+import { EntryEntity } from '../../../domain/entities/entry';
+import { IEntriesRepository } from '../../repositories/EntriesRepository';
 
 type CreateEntryUseCaseRequest = {
   entryId: number;
@@ -9,6 +10,7 @@ type CreateEntryUseCaseRequest = {
 };
 
 export class CreateEntryUseCase {
+  constructor(private entriesRepository: IEntriesRepository) {}
   async execute({
     entryId,
     value,
@@ -16,7 +18,7 @@ export class CreateEntryUseCase {
     subCategoryId,
     comment
   }: CreateEntryUseCaseRequest) {
-    const entry = EntryEntity.create({
+    const entry = this.entriesRepository.createEntry({
       entryId,
       value,
       date,
