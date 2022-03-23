@@ -22,4 +22,12 @@ export class InMemoryEntriesRepository implements IEntriesRepository {
 
     return entry;
   }
+
+  async findEntryById(entryId: number): Promise<EntryEntity | null> {
+    const entry = this.items.find((entry) => entry.props.entryId === entryId);
+
+    if (!entry) return null;
+
+    return entry;
+  }
 }

@@ -8,4 +8,6 @@ export interface IEntriesRepository {
     subCategoryId,
     comment
   }: EntryProps): Promise<EntryEntity>;
+
+  findEntryById(entryId: number): Promise<EntryEntity | null>;
 }

@@ -17,7 +17,7 @@ export class CreateEntryUseCase {
     subCategoryId,
     comment
   }: CreateEntryUseCaseRequest) {
-    const entry = this.entriesRepository.createEntry({
+    const entry = await this.entriesRepository.createEntry({
       entryId,
       value,
       date,

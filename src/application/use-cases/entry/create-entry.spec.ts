@@ -2,7 +2,7 @@ import { InMemoryEntriesRepository } from '../../../../tests/repositories/in-mem
 import { CreateEntryUseCase } from './create-entry';
 
 describe('Create entry use case', () => {
-  it('should be able to create a new entry use case', async () => {
+  it('should be able to create a new entry', async () => {
     const repository = new InMemoryEntriesRepository();
 
     const useCase = new CreateEntryUseCase(repository);

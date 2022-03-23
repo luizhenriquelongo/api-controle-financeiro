@@ -1,7 +1,7 @@
 export abstract class Entity<T> {
   public props: T;
 
-  constructor(props) {
+  constructor(props: T) {
     this.props = props;
   }
 }
