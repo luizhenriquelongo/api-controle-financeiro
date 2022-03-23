@@ -2,7 +2,9 @@
     "root": true,
     "parser": "@typescript-eslint/parser",
     "plugins": [
-      "@typescript-eslint"
+      "@typescript-eslint",
+      "no-loops",
+      "prettier"
     ],
     "extends": [
       "eslint:recommended",
