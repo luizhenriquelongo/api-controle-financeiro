@@ -1,4 +1,3 @@
-import { EntryEntity } from '../../../domain/entities/entry';
 import { IEntriesRepository } from '../../repositories/EntriesRepository';
 
 type CreateEntryUseCaseRequest = {
