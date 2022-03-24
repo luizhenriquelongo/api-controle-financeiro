@@ -30,4 +30,8 @@ export class InMemoryEntriesRepository implements IEntriesRepository {
 
     return entry;
   }
+
+  async getAllEntries(): Promise<EntryEntity[]> {
+    return this.items;
+  }
 }

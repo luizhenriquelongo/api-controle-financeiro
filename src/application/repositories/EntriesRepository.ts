@@ -10,4 +10,6 @@ export interface IEntriesRepository {
   }: EntryProps): Promise<EntryEntity>;
 
   findEntryById(entryId: number): Promise<EntryEntity | null>;
+
+  getAllEntries(): Promise<EntryEntity[]>;
 }
