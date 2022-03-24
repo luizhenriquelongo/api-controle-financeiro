@@ -1,5 +1,13 @@
 import { EntryEntity, EntryProps } from '../../domain/entities/entry';
 
+export type UpdateEntryProps = {
+  entryId: number;
+  value?: number;
+  date?: Date;
+  subCategoryId?: number;
+  comment?: string;
+};
+
 export interface IEntriesRepository {
   createEntry({
     entryId,
@@ -13,5 +21,13 @@ export interface IEntriesRepository {
 
   getAllEntries(): Promise<EntryEntity[]>;
 
-  deleteById(entryId: number): Promise<void>;
+  deleteEntryById(entryId: number): Promise<void>;
+
+  updateEntryById({
+    entryId,
+    value,
+    date,
+    subCategoryId,
+    comment
+  }: UpdateEntryProps): Promise<EntryEntity>;
 }

@@ -13,6 +13,6 @@ export class DeleteEntryUseCase {
       throw new Error("Can't delete entry because entry do not exists.");
     }
 
-    await this.entriesRepository.deleteById(entryId);
+    await this.entriesRepository.deleteEntryById(entryId);
   }
 }

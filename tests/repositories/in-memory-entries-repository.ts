@@ -1,4 +1,7 @@
-import { IEntriesRepository } from '../../src/application/repositories/EntriesRepository';
+import {
+  IEntriesRepository,
+  UpdateEntryProps
+} from '../../src/application/repositories/EntriesRepository';
 import { EntryProps, EntryEntity } from '../../src/domain/entities/entry';
 
 export class InMemoryEntriesRepository implements IEntriesRepository {
@@ -35,7 +38,29 @@ export class InMemoryEntriesRepository implements IEntriesRepository {
     return this.items;
   }
 
-  async deleteById(entryId: number): Promise<void> {
+  async deleteEntryById(entryId: number): Promise<void> {
     this.items = this.items.filter((entry) => entry.props.entryId !== entryId);
+  }
+
+  async updateEntryById({
+    entryId,
+    value,
+    date,
+    subCategoryId,
+    comment
+  }: UpdateEntryProps): Promise<EntryEntity> {
+    const entryIndex = this.items.findIndex(
+      (entry) => entry.props.entryId === entryId
+    );
+    const entry = this.items[entryIndex];
+
+    if (value) entry.props.value = value;
+    if (date) entry.props.date = date;
+    if (subCategoryId) entry.props.subCategoryId = subCategoryId;
+    if (comment) entry.props.comment = comment;
+
+    this.items[entryIndex] = entry;
+
+    return entry;
   }
 }
