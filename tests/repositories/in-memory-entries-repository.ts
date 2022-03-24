@@ -34,4 +34,8 @@ export class InMemoryEntriesRepository implements IEntriesRepository {
   async getAllEntries(): Promise<EntryEntity[]> {
     return this.items;
   }
+
+  async deleteById(entryId: number): Promise<void> {
+    this.items = this.items.filter((entry) => entry.props.entryId !== entryId);
+  }
 }

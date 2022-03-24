@@ -12,4 +12,6 @@ export interface IEntriesRepository {
   findEntryById(entryId: number): Promise<EntryEntity | null>;
 
   getAllEntries(): Promise<EntryEntity[]>;
+
+  deleteById(entryId: number): Promise<void>;
 }
