@@ -31,6 +31,5 @@ export class GetBalanceByPeriodUseCase {
       expense,
       balance: balanceSum
     });
-
   }
 }
