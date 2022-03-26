@@ -1,6 +1,6 @@
 import { Entity } from '../../core/domain/Entity';
 
-type SubCategoryProps = {
+export type SubCategoryProps = {
   categoryId: number;
   subCategoryId: number;
   name: string;
@@ -12,8 +12,6 @@ export class SubCategoryEntity extends Entity<SubCategoryProps> {
   }
 
   static create(props: SubCategoryProps) {
-    const subCategory = new SubCategoryEntity(props);
-
-    return subCategory;
+    return new SubCategoryEntity(props);
   }
 }

@@ -12,7 +12,7 @@ export interface ICategoriesRepository {
 
   getAllCategories(): Promise<CategoryEntity[]>;
 
-  deleteCategoryById(entryId: number): Promise<void>;
+  deleteCategoryById(categoryId: number): Promise<void>;
 
   updateCategoryById({
     categoryId,
