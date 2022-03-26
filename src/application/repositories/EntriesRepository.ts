@@ -1,4 +1,5 @@
 import { EntryEntity, EntryProps } from '../../domain/entities/entry';
+import { GetBalanceByPeriodUseCaseRequest } from '../use-cases/balance/get-balance-by-period';
 
 export type UpdateEntryProps = {
   entryId: number;
@@ -30,4 +31,9 @@ export interface IEntriesRepository {
     subCategoryId,
     comment
   }: UpdateEntryProps): Promise<EntryEntity>;
+
+  findEntriesByPeriod({
+    startDate,
+    endDate
+  }: GetBalanceByPeriodUseCaseRequest): Promise<EntryEntity[]>;
 }

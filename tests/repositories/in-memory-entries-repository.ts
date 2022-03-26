@@ -2,6 +2,7 @@ import {
   IEntriesRepository,
   UpdateEntryProps
 } from '../../src/application/repositories/EntriesRepository';
+import { GetBalanceByPeriodUseCaseRequest } from '../../src/application/use-cases/balance/get-balance-by-period';
 import { EntryProps, EntryEntity } from '../../src/domain/entities/entry';
 
 export class InMemoryEntriesRepository implements IEntriesRepository {
@@ -62,5 +63,22 @@ export class InMemoryEntriesRepository implements IEntriesRepository {
     this.items[entryIndex] = entry;
 
     return entry;
+  }
+
+  async findEntriesByPeriod({
+    startDate,
+    endDate
+  }: GetBalanceByPeriodUseCaseRequest): Promise<EntryEntity[]> {
+    return this.items.filter((entry) => {
+      const filterByStartDate = (date: Date) => {
+        return entry.props.date >= date;
+      };
+
+      const filterByEndDate = (date: Date) => {
+        return entry.props.date <= date;
+      };
+
+      return filterByStartDate(startDate) && filterByEndDate(endDate);
+    });
   }
 }

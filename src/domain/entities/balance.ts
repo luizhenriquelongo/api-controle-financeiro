@@ -2,7 +2,7 @@ import { Entity } from '../../core/domain/Entity';
 import { CategoryProps } from './category';
 
 type BalanceProps = {
-  category: CategoryProps;
+  category?: CategoryProps;
   income: number;
   expense: number;
   balance: number;
@@ -14,8 +14,6 @@ export class BalanceEntity extends Entity<BalanceProps> {
   }
 
   static create(props: BalanceProps) {
-    const balance = new BalanceEntity(props);
-
-    return balance;
+    return new BalanceEntity(props);
   }
 }
