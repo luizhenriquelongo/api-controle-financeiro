@@ -5,14 +5,14 @@ import { GetEntryUseCase } from './get-entry';
 describe('Get entry use case', () => {
   it('should be able to get an entry', async () => {
     const repository = new InMemoryEntriesRepository();
-    const stored_entry = EntryEntity.create({
+    const storedEntry = EntryEntity.create({
       entryId: 1,
       value: 12,
       date: new Date(),
       subCategoryId: 2,
       comment: 'some comment'
     });
-    repository.items.push(stored_entry);
+    repository.items.push(storedEntry);
 
     const useCase = new GetEntryUseCase(repository);
 
@@ -20,23 +20,23 @@ describe('Get entry use case', () => {
       entryId: 1
     });
 
-    expect(response).toBe(stored_entry);
+    expect(response).toBe(storedEntry);
   });
 
   test('should throw an error if no entry was found', async () => {
     const repository = new InMemoryEntriesRepository();
-    const stored_entry = EntryEntity.create({
+    const storedEntry = EntryEntity.create({
       entryId: 1,
       value: 12,
       date: new Date(),
       subCategoryId: 2,
       comment: 'some comment'
     });
-    repository.items.push(stored_entry);
+    repository.items.push(storedEntry);
 
     const useCase = new GetEntryUseCase(repository);
 
-    expect(async () => {
+    await expect(async () => {
       await useCase.execute({ entryId: 2 });
     }).rejects.toThrow('Entry not found.');
   });

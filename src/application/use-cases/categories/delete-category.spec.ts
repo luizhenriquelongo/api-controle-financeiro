@@ -5,11 +5,11 @@ import { DeleteCategoryUseCase } from './delete-category';
 describe('Delete category use case', () => {
   it('should be able to delete an existent category', async () => {
     const repository = new InMemoryCategoriesRepository();
-    const stored_category = CategoryEntity.create({
+    const storedCategory = CategoryEntity.create({
       categoryId: 1,
       name: 'Category 1'
     });
-    repository.items.push(stored_category);
+    repository.items.push(storedCategory);
 
     expect(repository.items.length).toBe(1);
 
@@ -22,11 +22,11 @@ describe('Delete category use case', () => {
 
   test('should throw an error if no category was found', async () => {
     const repository = new InMemoryCategoriesRepository();
-    const stored_category = CategoryEntity.create({
+    const storedCategory = CategoryEntity.create({
       categoryId: 1,
       name: 'Category 1'
     });
-    repository.items.push(stored_category);
+    repository.items.push(storedCategory);
 
     expect(repository.items.length).toBe(1);
     const useCase = new DeleteCategoryUseCase(repository);

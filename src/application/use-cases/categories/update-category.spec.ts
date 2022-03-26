@@ -27,11 +27,11 @@ describe('Update category use case', () => {
 
   test('should throw an error if no category was found', async () => {
     const repository = new InMemoryCategoriesRepository();
-    const stored_category = CategoryEntity.create({
+    const storedCategory = CategoryEntity.create({
       categoryId: 1,
       name: 'Category 1'
     });
-    repository.items.push(stored_category);
+    repository.items.push(storedCategory);
 
     expect(repository.items.length).toBe(1);
     const useCase = new UpdateCategoryUseCase(repository);
@@ -43,6 +43,6 @@ describe('Update category use case', () => {
       });
     }).rejects.toThrow("Can't update category because category do not exists.");
     expect(repository.items.length).toBe(1);
-    expect(repository.items[0]).toStrictEqual(stored_category);
+    expect(repository.items[0]).toStrictEqual(storedCategory);
   });
 });

@@ -5,11 +5,11 @@ import { GetCategoryUseCase } from './get-category';
 describe('Get category use case', () => {
   it('should be able to get a category', async () => {
     const repository = new InMemoryCategoriesRepository();
-    const stored_category = CategoryEntity.create({
+    const storedCategory = CategoryEntity.create({
       categoryId: 1,
       name: 'Category Name'
     });
-    repository.items.push(stored_category);
+    repository.items.push(storedCategory);
 
     const useCase = new GetCategoryUseCase(repository);
 
@@ -17,7 +17,7 @@ describe('Get category use case', () => {
       categoryId: 1
     });
 
-    expect(response).toBe(stored_category);
+    expect(response).toBe(storedCategory);
   });
 
   test('should throw an error if no category was found', async () => {
