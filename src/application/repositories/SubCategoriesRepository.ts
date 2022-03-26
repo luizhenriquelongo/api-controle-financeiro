@@ -27,4 +27,8 @@ export interface ISubCategoriesRepository {
     categoryId,
     name
   }: UpdateSubCategoryProps): Promise<SubCategoryEntity>;
+
+  getAllSubCategoriesByCategoryId(
+    categoryId: number
+  ): Promise<SubCategoryEntity[]>;
 }

@@ -70,15 +70,25 @@ export class InMemoryEntriesRepository implements IEntriesRepository {
     endDate
   }: GetBalanceByPeriodUseCaseRequest): Promise<EntryEntity[]> {
     return this.items.filter((entry) => {
-      const filterByStartDate = (date: Date) => {
-        return entry.props.date >= date;
-      };
+      return entry.props.date >= startDate && entry.props.date <= endDate;
+    });
+  }
 
-      const filterByEndDate = (date: Date) => {
-        return entry.props.date <= date;
-      };
-
-      return filterByStartDate(startDate) && filterByEndDate(endDate);
+  async findEntriesByPeriodAndSubCategories({
+    startDate,
+    endDate,
+    subCategoriesIds
+  }: {
+    startDate: Date;
+    endDate: Date;
+    subCategoriesIds: number[];
+  }) {
+    return this.items.filter((entry) => {
+      return (
+        entry.props.date >= startDate &&
+        entry.props.date <= endDate &&
+        subCategoriesIds.includes(entry.props.subCategoryId)
+      );
     });
   }
 }

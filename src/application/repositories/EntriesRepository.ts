@@ -36,4 +36,14 @@ export interface IEntriesRepository {
     startDate,
     endDate
   }: GetBalanceByPeriodUseCaseRequest): Promise<EntryEntity[]>;
+
+  findEntriesByPeriodAndSubCategories({
+    startDate,
+    endDate,
+    subCategoriesIds
+  }: {
+    startDate: Date;
+    endDate: Date;
+    subCategoriesIds: number[];
+  }): Promise<EntryEntity[]>;
 }

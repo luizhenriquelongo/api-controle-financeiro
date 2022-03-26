@@ -67,4 +67,12 @@ export class InMemorySubCategoriesRepository
 
     return subCategory;
   }
+
+  async getAllSubCategoriesByCategoryId(
+    categoryId: number
+  ): Promise<SubCategoryEntity[]> {
+    return this.items.filter(
+      (subCategory) => subCategory.props.categoryId === categoryId
+    );
+  }
 }
