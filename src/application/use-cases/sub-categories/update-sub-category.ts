@@ -18,7 +18,9 @@ export class UpdateSubCategoryUseCase {
     name
   }: UpdateSubCategoryUseCaseRequest) {
     if (categoryId) {
-      const category = this.categoriesRepository.findCategoryById(categoryId);
+      const category = await this.categoriesRepository.findCategoryById(
+        categoryId
+      );
       if (!category)
         throw new Error(
           `Can't update a sub category: category id ${categoryId} does not exists.`
@@ -30,7 +32,7 @@ export class UpdateSubCategoryUseCase {
 
     if (!subCategory) {
       throw new Error(
-        `Can't update sub category:  sub category id ${categoryId} does not exists.`
+        `Can't update sub category:  sub category id ${subCategoryId} does not exists.`
       );
     }
 

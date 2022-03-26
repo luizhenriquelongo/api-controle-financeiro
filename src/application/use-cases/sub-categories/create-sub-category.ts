@@ -1,15 +1,33 @@
+import { ISubCategoriesRepository } from '../../repositories/SubCategoriesRepository';
 import { ICategoriesRepository } from '../../repositories/CategoriesRepository';
 
-type CreateCategoryUseCaseRequest = {
+type CreateSubCategoryUseCaseRequest = {
+  subCategoryId: number;
   categoryId: number;
   name: string;
 };
 
-export class CreateCategoryUseCase {
-  constructor(private entriesRepository: ICategoriesRepository) {}
-  async execute({ categoryId, name }: CreateCategoryUseCaseRequest) {
-    return await this.entriesRepository.createCategory({
-      categoryId,
+export class CreateSubCategoryUseCase {
+  constructor(
+    private categoriesRepository: ICategoriesRepository,
+    private subCategoriesRepository: ISubCategoriesRepository
+  ) {}
+  async execute({
+    subCategoryId,
+    categoryId,
+    name
+  }: CreateSubCategoryUseCaseRequest) {
+    const category = await this.categoriesRepository.findCategoryById(
+      categoryId
+    );
+    if (!category)
+      throw new Error(
+        `Can't create a sub category: category id ${categoryId} does not exists.`
+      );
+
+    return await this.subCategoriesRepository.createSubCategory({
+      subCategoryId,
+      categoryId: category.props.categoryId,
       name
     });
   }

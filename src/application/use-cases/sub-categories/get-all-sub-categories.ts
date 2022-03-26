@@ -1,8 +1,8 @@
-import { ICategoriesRepository } from '../../repositories/CategoriesRepository';
+import { ISubCategoriesRepository } from '../../repositories/SubCategoriesRepository';
 
-export class GetAllCategoriesUseCase {
-  constructor(private categoriesRepository: ICategoriesRepository) {}
+export class GetAllSubCategoriesUseCase {
+  constructor(private subCategoriesRepository: ISubCategoriesRepository) {}
   async execute() {
-    return await this.categoriesRepository.getAllCategories();
+    return await this.subCategoriesRepository.getAllSubCategories();
   }
 }

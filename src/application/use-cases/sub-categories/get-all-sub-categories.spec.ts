@@ -1,26 +1,29 @@
-import { InMemoryCategoriesRepository } from '../../../../tests/repositories/in-memory-categories-repository';
-import { CategoryEntity } from '../../../domain/entities/category';
-import { GetAllCategoriesUseCase } from './get-all-categories';
+import { getInMemorySubCategoriesRepository } from '../../../../tests/repositories/utils';
+import { SubCategoryEntity } from '../../../domain/entities/sub-category';
+import { GetAllSubCategoriesUseCase } from './get-all-sub-categories';
 
 describe('Get all categories use case', () => {
   it('should be able to get all categories', async () => {
-    const repository = new InMemoryCategoriesRepository();
-    const stored_category = CategoryEntity.create({
+    const storedSubCategory = SubCategoryEntity.create({
+      subCategoryId: 1,
       categoryId: 1,
-      name: 'Category 1'
+      name: 'Sub Category 1'
     });
-    repository.items.push(stored_category);
-
-    const stored_category2 = CategoryEntity.create({
-      categoryId: 2,
-      name: 'Category 2'
+    const storedSubCategory2 = SubCategoryEntity.create({
+      subCategoryId: 2,
+      categoryId: 1,
+      name: 'Sub Category 2'
     });
-    repository.items.push(stored_category2);
 
-    const useCase = new GetAllCategoriesUseCase(repository);
+    const repository = await getInMemorySubCategoriesRepository([
+      storedSubCategory,
+      storedSubCategory2
+    ]);
+
+    const useCase = new GetAllSubCategoriesUseCase(repository);
 
     const response = await useCase.execute();
 
-    expect(response).toStrictEqual([stored_category, stored_category2]);
+    expect(response).toStrictEqual([storedSubCategory, storedSubCategory2]);
   });
 });

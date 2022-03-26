@@ -1,39 +1,44 @@
-import { InMemoryCategoriesRepository } from '../../../../tests/repositories/in-memory-categories-repository';
-import { CategoryEntity } from '../../../domain/entities/category';
-import { DeleteCategoryUseCase } from './delete-category';
+import { getInMemorySubCategoriesRepository } from '../../../../tests/repositories/utils';
+import { SubCategoryEntity } from '../../../domain/entities/sub-category';
+import { DeleteSubCategoryUseCase } from './delete-sub-category';
 
-describe('Delete category use case', () => {
-  it('should be able to delete an existent category', async () => {
-    const repository = new InMemoryCategoriesRepository();
-    const stored_category = CategoryEntity.create({
+describe('Delete sub category use case', () => {
+  it('should be able to delete an existent sub category', async () => {
+    const storedSubCategory = SubCategoryEntity.create({
+      subCategoryId: 1,
       categoryId: 1,
-      name: 'Category 1'
+      name: 'Sub Category 1'
     });
-    repository.items.push(stored_category);
+    const repository = await getInMemorySubCategoriesRepository([
+      storedSubCategory
+    ]);
 
     expect(repository.items.length).toBe(1);
 
-    const useCase = new DeleteCategoryUseCase(repository);
-
-    await useCase.execute({ categoryId: 1 });
+    const useCase = new DeleteSubCategoryUseCase(repository);
+    await useCase.execute({ subCategoryId: 1 });
 
     expect(repository.items.length).toBe(0);
   });
 
-  test('should throw an error if no category was found', async () => {
-    const repository = new InMemoryCategoriesRepository();
-    const stored_category = CategoryEntity.create({
+  test('should throw an error if no sub category was found', async () => {
+    const storedSubCategory = SubCategoryEntity.create({
+      subCategoryId: 1,
       categoryId: 1,
-      name: 'Category 1'
+      name: 'Sub Category 1'
     });
-    repository.items.push(stored_category);
+    const repository = await getInMemorySubCategoriesRepository([
+      storedSubCategory
+    ]);
 
     expect(repository.items.length).toBe(1);
-    const useCase = new DeleteCategoryUseCase(repository);
+    const useCase = new DeleteSubCategoryUseCase(repository);
 
     await expect(async () => {
-      await useCase.execute({ categoryId: 2 });
-    }).rejects.toThrow("Can't delete category because category do not exists.");
+      await useCase.execute({ subCategoryId: 2 });
+    }).rejects.toThrow(
+      "Can't delete sub category because sub category do not exists."
+    );
     expect(repository.items.length).toBe(1);
   });
 });
