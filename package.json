@@ -33,5 +33,11 @@
     "hooks": {
       "pre-commit": "npm run prettier-format && npm run lint"
     }
+  },
+  "dependencies": {
+    "@types/express": "^4.17.13",
+    "express": "^4.17.3",
+    "pg": "^8.7.3",
+    "typeorm": "^0.3.4"
   }
 }
