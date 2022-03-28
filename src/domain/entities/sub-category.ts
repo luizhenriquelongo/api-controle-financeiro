@@ -14,4 +14,12 @@ export class SubCategoryEntity extends Entity<SubCategoryProps> {
   static create(props: SubCategoryProps) {
     return new SubCategoryEntity(props);
   }
+
+  public toDisplay() {
+    return {
+      id_subcategoria: this.props.subCategoryId,
+      nome: this.props.name,
+      id_categoria: this.props.categoryId
+    };
+  }
 }

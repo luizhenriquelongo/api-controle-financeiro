@@ -14,8 +14,16 @@ export class EntryEntity extends Entity<EntryProps> {
   }
 
   static create(props: EntryProps) {
-    const entry = new EntryEntity(props);
+    return new EntryEntity(props);
+  }
 
-    return entry;
+  public toDisplay() {
+    return {
+      id_lancamento: this.props.entryId,
+      valor: this.props.value,
+      data: this.props.date.toLocaleDateString(),
+      id_subcategoria: this.props.subCategoryId,
+      comentario: this.props.comment
+    };
   }
 }

@@ -2,18 +2,15 @@ import {
   CategoryEntity,
   CategoryProps
 } from '../../src/domain/entities/category';
-import {
-  ICategoriesRepository,
-  UpdateCategoryProps
-} from '../../src/application/repositories/CategoriesRepository';
+import { ICategoriesRepository } from '../../src/application/repositories/categories.repository';
 
 export class InMemoryCategoriesRepository implements ICategoriesRepository {
   public items: CategoryEntity[] = [];
 
-  async createCategory({
-    categoryId,
-    name
-  }: CategoryProps): Promise<CategoryEntity> {
+  async createCategory({ name }: { name: string }): Promise<CategoryEntity> {
+    const categoryId =
+      this.items.length > 0 ? this.items[-1].props.categoryId + 1 : 1;
+
     const category = CategoryEntity.create({
       categoryId,
       name
@@ -46,7 +43,7 @@ export class InMemoryCategoriesRepository implements ICategoriesRepository {
   async updateCategoryById({
     categoryId,
     name
-  }: UpdateCategoryProps): Promise<CategoryEntity> {
+  }: CategoryProps): Promise<CategoryEntity> {
     const categoryIndex = this.items.findIndex(
       (category) => category.props.categoryId === categoryId
     );

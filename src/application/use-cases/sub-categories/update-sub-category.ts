@@ -1,5 +1,5 @@
-import { ICategoriesRepository } from '../../repositories/CategoriesRepository';
-import { ISubCategoriesRepository } from '../../repositories/SubCategoriesRepository';
+import { ICategoriesRepository } from '../../repositories/categories.repository';
+import { ISubCategoriesRepository } from '../../repositories/sub-categories.repository';
 
 type UpdateSubCategoryUseCaseRequest = {
   subCategoryId: number;

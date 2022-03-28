@@ -1,6 +1,7 @@
 import { InMemoryCategoriesRepository } from '../../../../tests/repositories/in-memory-categories-repository';
 import { CategoryEntity } from '../../../domain/entities/category';
 import { DeleteCategoryUseCase } from './delete-category';
+import APIException from "../../exceptions/api.exception";
 
 describe('Delete category use case', () => {
   it('should be able to delete an existent category', async () => {
@@ -30,10 +31,8 @@ describe('Delete category use case', () => {
 
     expect(repository.items.length).toBe(1);
     const useCase = new DeleteCategoryUseCase(repository);
-
-    await expect(async () => {
-      await useCase.execute({ categoryId: 2 });
-    }).rejects.toThrow("Can't delete category because category do not exists.");
+    const result = await useCase.execute({ categoryId: 2 });
+    expect(result).toBeInstanceOf(APIException);
     expect(repository.items.length).toBe(1);
   });
 });

@@ -1,7 +1,7 @@
 import {
   ISubCategoriesRepository,
   UpdateSubCategoryProps
-} from '../../src/application/repositories/SubCategoriesRepository';
+} from '../../src/application/repositories/sub-categories.repository';
 import {
   SubCategoryEntity,
   SubCategoryProps

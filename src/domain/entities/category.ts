@@ -11,8 +11,13 @@ export class CategoryEntity extends Entity<CategoryProps> {
   }
 
   static create(props: CategoryProps) {
-    const category = new CategoryEntity(props);
+    return new CategoryEntity(props);
+  }
 
-    return category;
+  public toDisplay() {
+    return {
+      id_categoria: this.props.categoryId,
+      nome: this.props.name
+    };
   }
 }

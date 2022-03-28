@@ -4,10 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "ts-node-dev --transpile-only src/server.ts",
     "lint": "eslint . --ext .ts",
     "lint-and-fix": "eslint . --ext .ts --fix",
     "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
-    "test": "jest"
+    "test": "jest",
+    "tsc": "tsc",
+    "typeorm": "ts-node-dev node_modules/.bin/typeorm"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +22,7 @@
     "@types/node": "^17.0.22",
     "@typescript-eslint/eslint-plugin": "^5.16.0",
     "@typescript-eslint/parser": "^5.16.0",
+    "@types/express": "^4.17.13",
     "eslint": "^8.11.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-no-loops": "^0.3.0",
@@ -27,6 +31,7 @@
     "jest": "^27.5.1",
     "prettier": "^2.6.0",
     "ts-node": "^10.7.0",
+    "ts-node-dev": "^1.1.8",
     "typescript": "^4.6.2"
   },
   "husky": {
@@ -35,9 +40,10 @@
     }
   },
   "dependencies": {
-    "@types/express": "^4.17.13",
+    "dotenv": "^16.0.0",
     "express": "^4.17.3",
-    "pg": "^8.7.3",
+    "pg": "^8.4.0",
+    "reflect-metadata": "^0.1.13",
     "typeorm": "^0.3.4"
   }
 }

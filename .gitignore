@@ -7,6 +7,8 @@
 
 .idea/
 
+./build/
+
 ### Node ###
 # Logs
 logs

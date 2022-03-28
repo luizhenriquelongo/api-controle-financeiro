@@ -10,7 +10,6 @@ describe('Create category use case', () => {
     expect(repository.items.length).toBe(0);
 
     const response = await useCase.execute({
-      categoryId: 1,
       name: 'Category 1'
     });
 

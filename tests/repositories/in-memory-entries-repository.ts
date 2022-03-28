@@ -1,7 +1,7 @@
 import {
   IEntriesRepository,
   UpdateEntryProps
-} from '../../src/application/repositories/EntriesRepository';
+} from '../../src/application/repositories/entries.repository';
 import { GetBalanceByPeriodUseCaseRequest } from '../../src/application/use-cases/balance/get-balance-by-period';
 import { EntryProps, EntryEntity } from '../../src/domain/entities/entry';
 

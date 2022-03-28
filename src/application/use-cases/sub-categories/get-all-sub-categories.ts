@@ -1,4 +1,4 @@
-import { ISubCategoriesRepository } from '../../repositories/SubCategoriesRepository';
+import { ISubCategoriesRepository } from '../../repositories/sub-categories.repository';
 
 export class GetAllSubCategoriesUseCase {
   constructor(private subCategoriesRepository: ISubCategoriesRepository) {}

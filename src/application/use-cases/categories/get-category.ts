@@ -1,4 +1,6 @@
-import { ICategoriesRepository } from '../../repositories/CategoriesRepository';
+import { ICategoriesRepository } from '../../repositories/categories.repository';
+import { CategoryEntity } from '../../../domain/entities/category';
+import APIException from "../../exceptions/api.exception";
 
 type GetCategoryUseCaseRequest = {
   categoryId: number;
@@ -6,13 +8,15 @@ type GetCategoryUseCaseRequest = {
 
 export class GetCategoryUseCase {
   constructor(private categoriesRepository: ICategoriesRepository) {}
-  async execute({ categoryId }: GetCategoryUseCaseRequest) {
+  async execute({
+    categoryId
+  }: GetCategoryUseCaseRequest): Promise<CategoryEntity | APIException> {
     const category = await this.categoriesRepository.findCategoryById(
       categoryId
     );
 
     if (!category) {
-      throw new Error('Category not found.');
+      return new APIException(404, `Category with id ${categoryId} not found`);
     }
 
     return category;

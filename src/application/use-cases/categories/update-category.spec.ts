@@ -1,6 +1,7 @@
 import { InMemoryCategoriesRepository } from '../../../../tests/repositories/in-memory-categories-repository';
 import { CategoryEntity } from '../../../domain/entities/category';
 import { UpdateCategoryUseCase } from './update-category';
+import APIException from '../../exceptions/api.exception';
 
 describe('Update category use case', () => {
   it('should be able to update an existent category', async () => {
@@ -20,9 +21,11 @@ describe('Update category use case', () => {
       categoryId: 1,
       name: 'Category 2'
     });
-
+    expect(response).not.toBeInstanceOf(APIException);
     expect(repository.items.length).toBe(1);
-    expect(response.props.name).toBe('Category 2');
+    if (!(response instanceof APIException)) {
+      expect(response.props.name).toBe('Category 2');
+    }
   });
 
   test('should throw an error if no category was found', async () => {
@@ -36,12 +39,11 @@ describe('Update category use case', () => {
     expect(repository.items.length).toBe(1);
     const useCase = new UpdateCategoryUseCase(repository);
 
-    await expect(async () => {
-      await useCase.execute({
-        categoryId: 2,
-        name: 'Category 2'
-      });
-    }).rejects.toThrow("Can't update category because category do not exists.");
+    const result = await useCase.execute({
+      categoryId: 2,
+      name: 'Category 2'
+    });
+    expect(result).toBeInstanceOf(APIException);
     expect(repository.items.length).toBe(1);
     expect(repository.items[0]).toStrictEqual(storedCategory);
   });

@@ -1,6 +1,7 @@
 import { InMemoryCategoriesRepository } from '../../../../tests/repositories/in-memory-categories-repository';
 import { CategoryEntity } from '../../../domain/entities/category';
 import { GetCategoryUseCase } from './get-category';
+import APIException from "../../exceptions/api.exception";
 
 describe('Get category use case', () => {
   it('should be able to get a category', async () => {
@@ -30,8 +31,7 @@ describe('Get category use case', () => {
 
     const useCase = new GetCategoryUseCase(repository);
 
-    await expect(async () => {
-      await useCase.execute({ categoryId: 2 });
-    }).rejects.toThrow('Category not found.');
+    const result = await useCase.execute({ categoryId: 2 });
+    expect(result).toBeInstanceOf(APIException);
   });
 });

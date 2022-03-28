@@ -1,7 +1,7 @@
-import { IEntriesRepository } from '../../repositories/EntriesRepository';
+import { IEntriesRepository } from '../../repositories/entries.repository';
 import { BalanceEntity } from '../../../domain/entities/balance';
-import { ICategoriesRepository } from '../../repositories/CategoriesRepository';
-import { ISubCategoriesRepository } from '../../repositories/SubCategoriesRepository';
+import { ICategoriesRepository } from '../../repositories/categories.repository';
+import { ISubCategoriesRepository } from '../../repositories/sub-categories.repository';
 
 export type GetBalanceByPeriodAndCategoryUseCaseRequest = {
   startDate: Date;

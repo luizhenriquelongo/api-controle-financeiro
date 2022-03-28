@@ -1,4 +1,4 @@
-import { IEntriesRepository } from '../../repositories/EntriesRepository';
+import { IEntriesRepository } from '../../repositories/entries.repository';
 
 export class GetAllEntriesUseCase {
   constructor(private entriesRepository: IEntriesRepository) {}
