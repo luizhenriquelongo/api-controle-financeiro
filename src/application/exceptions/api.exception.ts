@@ -1,12 +1,14 @@
+import { ValidationError } from 'express-validator';
+
 class APIException extends Error {
   status: number;
-  message: string;
+  errors: string[];
   code: string;
 
-  constructor(status: number, message: string, code: string) {
-    super(message);
+  constructor(status: number, errors: string[], code: string) {
+    super(errors.toString());
     this.status = status;
-    this.message = message;
+    this.errors = errors;
     this.code = code;
   }
 }

@@ -9,6 +9,7 @@ import APIException from '../exceptions/api.exception';
 import methodNotAllowed from '../middlewares/method-not-allowed.middleware';
 import { GetCategoriesWithFiltersUseCase } from '../use-cases/categories/get-categories-with-filters';
 import { CategoryEntity } from '../../domain/entities/category';
+import { body, param, validationResult } from 'express-validator';
 
 export class CategoryController {
   public router: Router;
@@ -37,39 +38,59 @@ export class CategoryController {
   };
 
   public get = async (req: Request, res: Response, next: NextFunction) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty())
+      return next(
+        new APIException(
+          400,
+          errors.array().map((error) => error.msg),
+          'erro_validacao'
+        )
+      );
+
     const { id } = req.params;
     const useCase = new GetCategoryUseCase(this.repository);
     const result = await useCase.execute({ categoryId: Number(id) });
+
     if (result instanceof APIException) return next(result);
     res.send(result.toDisplay());
   };
 
   public create = async (req: Request, res: Response, next: NextFunction) => {
-    const { name } = req.body;
-
-    if (!name)
+    const errors = validationResult(req);
+    if (!errors.isEmpty())
       return next(
-        new APIException(400, `Property 'name' is required.`, 'ValidationError')
+        new APIException(
+          400,
+          errors.array().map((error) => error.msg),
+          'erro_validacao'
+        )
       );
+    const { nome } = req.body;
 
     const useCase = new CreateCategoryUseCase(this.repository);
-    const result = await useCase.execute({ name });
+    const result = await useCase.execute({ name: nome });
     res.status(201).send(result.toDisplay());
   };
 
   public update = async (req: Request, res: Response, next: NextFunction) => {
-    const { id } = req.params;
-    const { name } = req.body;
-
-    if (!name)
+    const errors = validationResult(req);
+    if (!errors.isEmpty())
       return next(
-        new APIException(400, `O campo 'nome' é obrigatório.`, 'erro_validacao')
+        new APIException(
+          400,
+          errors.array().map((error) => error.msg),
+          'erro_validacao'
+        )
       );
+
+    const { id } = req.params;
+    const { nome } = req.body;
 
     const useCase = new UpdateCategoryUseCase(this.repository);
     const result = await useCase.execute({
       categoryId: Number(id),
-      name
+      name: nome
     });
 
     if (result instanceof APIException) return next(result);
@@ -77,6 +98,16 @@ export class CategoryController {
   };
 
   public delete = async (req: Request, res: Response, next: NextFunction) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty())
+      return next(
+        new APIException(
+          400,
+          errors.array().map((error) => error.msg),
+          'erro_validacao'
+        )
+      );
+
     const { id } = req.params;
     const useCase = new DeleteCategoryUseCase(this.repository);
     const result = await useCase.execute({ categoryId: Number(id) });
@@ -84,12 +115,44 @@ export class CategoryController {
     res.status(204).send();
   };
 
+  public validate = (method: string) => {
+    switch (method) {
+      case 'get': {
+        return [
+          param('id', 'O id da categoria deve ser um número inteiro')
+            .exists()
+            .isInt()
+        ];
+      }
+      case 'create': {
+        return [body('nome', "o campo 'nome' é obrigatório").exists()];
+      }
+      case 'update': {
+        return [
+          param('id', 'O id da categoria deve ser um número inteiro')
+            .exists()
+            .isInt(),
+          body('nome', "o campo 'nome' é obrigatório").exists()
+        ];
+      }
+      case 'delete': {
+        return [
+          param('id', 'O id da categoria deve ser um número inteiro')
+            .exists()
+            .isInt()
+        ];
+      }
+      default:
+        return [];
+    }
+  };
+
   public registerRoutes() {
     this.router.get('/', this.list);
-    this.router.get('/:id', this.get);
-    this.router.post('/', this.create);
-    this.router.put('/:id', this.update);
-    this.router.delete('/:id', this.delete);
+    this.router.get('/:id', this.validate('get'), this.get);
+    this.router.post('/', this.validate('create'), this.create);
+    this.router.put('/:id', this.validate('update'), this.update);
+    this.router.delete('/:id', this.validate('delete'), this.delete);
     this.router.all('/', methodNotAllowed);
   }
 }

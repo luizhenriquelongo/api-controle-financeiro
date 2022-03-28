@@ -3,15 +3,18 @@ import { CategoryController } from './application/controllers/category.controlle
 import { postgresDataSource } from './database/data-source';
 import 'reflect-metadata';
 import errorMiddleware from './application/middlewares/error.middleware';
+import { SubCategoryController } from './application/controllers/sub-category.controller';
 
 class Server {
   private app: express.Application;
   private categoryController: CategoryController;
+  private subCategoryController: SubCategoryController;
 
   constructor() {
     this.app = express();
     this.configuration();
     this.categoryController = new CategoryController();
+    this.subCategoryController = new SubCategoryController();
     this.registerRoutes();
   }
 
@@ -22,6 +25,7 @@ class Server {
   public async registerRoutes() {
     this.app.use(express.json());
     this.app.use('/v1/categorias', this.categoryController.router);
+    this.app.use('/v1/subcategorias', this.subCategoryController.router);
     this.app.get('/', (req: Request, res: Response) => {
       res.send('Home Page!');
     });
@@ -40,10 +44,11 @@ postgresDataSource
   .then(() => {
     // eslint-disable-next-line no-console
     console.log('Data Source has been initialized!');
-    const server = new Server();
-    server.start();
   })
   .catch((err) => {
     // eslint-disable-next-line no-console
     console.error('Error during Data Source initialization:', err);
   });
+
+const server = new Server();
+server.start();

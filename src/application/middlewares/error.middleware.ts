@@ -10,7 +10,7 @@ function errorMiddleware(
 ) {
   response.status(error.status).send({
     codigo: error.code,
-    mensagem: error.message
+    mensagem: error.errors
   });
 }
 
