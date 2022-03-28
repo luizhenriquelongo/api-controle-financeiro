@@ -38,10 +38,12 @@ class Server {
 postgresDataSource
   .initialize()
   .then(() => {
+    // eslint-disable-next-line no-console
     console.log('Data Source has been initialized!');
     const server = new Server();
     server.start();
   })
   .catch((err) => {
+    // eslint-disable-next-line no-console
     console.error('Error during Data Source initialization:', err);
   });

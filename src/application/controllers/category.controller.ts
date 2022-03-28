@@ -6,9 +6,7 @@ import { GetCategoryUseCase } from '../use-cases/categories/get-category';
 import { DeleteCategoryUseCase } from '../use-cases/categories/delete-category';
 import { UpdateCategoryUseCase } from '../use-cases/categories/update-category';
 import APIException from '../exceptions/api.exception';
-import { formatSuccessfulResponse } from '../utils';
 import methodNotAllowed from '../middlewares/method-not-allowed.middleware';
-import { GetCategoriesFilter } from '../use-cases/categories/types';
 import { GetCategoriesWithFiltersUseCase } from '../use-cases/categories/get-categories-with-filters';
 import { CategoryEntity } from '../../domain/entities/category';
 

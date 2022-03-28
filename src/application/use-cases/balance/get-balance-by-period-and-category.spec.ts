@@ -4,7 +4,6 @@ import {
   getInMemoryEntriesRepository,
   getInMemorySubCategoriesRepository
 } from '../../../../tests/repositories/utils';
-import { GetBalanceByPeriodUseCase } from './get-balance-by-period';
 import { CategoryEntity } from '../../../domain/entities/category';
 import { SubCategoryEntity } from '../../../domain/entities/sub-category';
 import { GetBalanceByPeriodAndCategoryUseCase } from './get-balance-by-period-and-category';
