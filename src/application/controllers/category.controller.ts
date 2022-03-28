@@ -8,6 +8,9 @@ import { UpdateCategoryUseCase } from '../use-cases/categories/update-category';
 import APIException from '../exceptions/api.exception';
 import { formatSuccessfulResponse } from '../utils';
 import methodNotAllowed from '../middlewares/method-not-allowed.middleware';
+import { GetCategoriesFilter } from '../use-cases/categories/types';
+import { GetCategoriesWithFiltersUseCase } from '../use-cases/categories/get-categories-with-filters';
+import {CategoryEntity} from "../../domain/entities/category";
 
 export class CategoryController {
   public router: Router;
@@ -20,8 +23,16 @@ export class CategoryController {
   }
 
   public list = async (req: Request, res: Response) => {
-    const useCase = new GetAllCategoriesUseCase(this.repository);
-    const categories = await useCase.execute();
+    const { nome } = req.query;
+    let categories: CategoryEntity[];
+    if (nome) {
+      const useCase = new GetCategoriesWithFiltersUseCase(this.repository);
+      categories = await useCase.execute({ name: String(nome) });
+    } else {
+      const useCase = new GetAllCategoriesUseCase(this.repository);
+      categories = await useCase.execute();
+    }
+
     const data = categories.map((category) => category.toDisplay());
 
     res.send(formatSuccessfulResponse(data));

@@ -3,9 +3,18 @@ import {
   CategoryProps
 } from '../../src/domain/entities/category';
 import { ICategoriesRepository } from '../../src/application/repositories/categories.repository';
+import { GetCategoriesFilter } from '../../src/application/use-cases/categories/types';
 
 export class InMemoryCategoriesRepository implements ICategoriesRepository {
   public items: CategoryEntity[] = [];
+
+  async getCategoriesWithFilters(
+    filters: GetCategoriesFilter
+  ): Promise<CategoryEntity[]> {
+    return this.items.filter((category) =>
+      category.props.name.includes(filters.name)
+    );
+  }
 
   async createCategory({ name }: { name: string }): Promise<CategoryEntity> {
     const categoryId =
