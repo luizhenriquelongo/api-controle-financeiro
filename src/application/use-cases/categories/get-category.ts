@@ -1,6 +1,6 @@
 import { ICategoriesRepository } from '../../repositories/categories.repository';
 import { CategoryEntity } from '../../../domain/entities/category';
-import APIException from "../../exceptions/api.exception";
+import APIException from '../../exceptions/api.exception';
 
 type GetCategoryUseCaseRequest = {
   categoryId: number;

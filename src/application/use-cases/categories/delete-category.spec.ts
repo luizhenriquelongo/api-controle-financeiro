@@ -1,7 +1,7 @@
 import { InMemoryCategoriesRepository } from '../../../../tests/repositories/in-memory-categories-repository';
 import { CategoryEntity } from '../../../domain/entities/category';
 import { DeleteCategoryUseCase } from './delete-category';
-import APIException from "../../exceptions/api.exception";
+import APIException from '../../exceptions/api.exception';
 
 describe('Delete category use case', () => {
   it('should be able to delete an existent category', async () => {
