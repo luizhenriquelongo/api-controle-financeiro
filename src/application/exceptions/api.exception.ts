@@ -1,13 +1,13 @@
 class APIException extends Error {
   status: number;
   message: string;
-  type?: string;
+  code: string;
 
-  constructor(status: number, message: string, type?: string) {
+  constructor(status: number, message: string, code: string) {
     super(message);
     this.status = status;
     this.message = message;
-    this.type = type;
+    this.code = code;
   }
 }
 

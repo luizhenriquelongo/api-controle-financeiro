@@ -10,7 +10,7 @@ import { formatSuccessfulResponse } from '../utils';
 import methodNotAllowed from '../middlewares/method-not-allowed.middleware';
 import { GetCategoriesFilter } from '../use-cases/categories/types';
 import { GetCategoriesWithFiltersUseCase } from '../use-cases/categories/get-categories-with-filters';
-import {CategoryEntity} from "../../domain/entities/category";
+import { CategoryEntity } from '../../domain/entities/category';
 
 export class CategoryController {
   public router: Router;
@@ -35,7 +35,7 @@ export class CategoryController {
 
     const data = categories.map((category) => category.toDisplay());
 
-    res.send(formatSuccessfulResponse(data));
+    res.send(data);
   };
 
   public get = async (req: Request, res: Response, next: NextFunction) => {
@@ -43,7 +43,7 @@ export class CategoryController {
     const useCase = new GetCategoryUseCase(this.repository);
     const result = await useCase.execute({ categoryId: Number(id) });
     if (result instanceof APIException) return next(result);
-    res.send(formatSuccessfulResponse(result.toDisplay()));
+    res.send(result.toDisplay());
   };
 
   public create = async (req: Request, res: Response, next: NextFunction) => {
@@ -56,7 +56,7 @@ export class CategoryController {
 
     const useCase = new CreateCategoryUseCase(this.repository);
     const result = await useCase.execute({ name });
-    res.status(201).send(formatSuccessfulResponse(result.toDisplay()));
+    res.status(201).send(result.toDisplay());
   };
 
   public update = async (req: Request, res: Response, next: NextFunction) => {
@@ -65,7 +65,7 @@ export class CategoryController {
 
     if (!name)
       return next(
-        new APIException(400, `Property 'name' is required.`, 'ValidationError')
+        new APIException(400, `O campo 'nome' é obrigatório.`, 'erro_validacao')
       );
 
     const useCase = new UpdateCategoryUseCase(this.repository);
@@ -75,7 +75,7 @@ export class CategoryController {
     });
 
     if (result instanceof APIException) return next(result);
-    res.send(formatSuccessfulResponse(result.toDisplay()));
+    res.send(result.toDisplay());
   };
 
   public delete = async (req: Request, res: Response, next: NextFunction) => {

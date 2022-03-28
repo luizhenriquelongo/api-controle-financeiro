@@ -16,7 +16,11 @@ export class GetCategoryUseCase {
     );
 
     if (!category) {
-      return new APIException(404, `Category with id ${categoryId} not found`);
+      return new APIException(
+        404,
+        `Categoria com id ${categoryId} não existe.`,
+        'recurso_nao_encontrado'
+      );
     }
 
     return category;

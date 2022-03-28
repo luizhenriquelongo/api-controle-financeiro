@@ -18,7 +18,8 @@ export class DeleteCategoryUseCase {
     if (!category) {
       return new APIException(
         404,
-        `Can't delete category because category with id ${categoryId} do not exists.`
+        `Não foi possível excluir categoria: Categoria com id ${categoryId} não existe.`,
+        'recurso_nao_encontrado'
       );
     }
 

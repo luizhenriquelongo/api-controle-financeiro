@@ -20,7 +20,8 @@ export class UpdateCategoryUseCase {
     if (!category) {
       return new APIException(
         404,
-        `Can't update category because category with id ${categoryId} do not exists.`
+        `Não foi possível editar categoria: Categoria com id ${categoryId} não existe.`,
+        'recurso_nao_encontrado'
       );
     }
 
