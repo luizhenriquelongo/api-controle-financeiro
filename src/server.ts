@@ -6,6 +6,7 @@ import errorMiddleware from './application/middlewares/error.middleware';
 import { SubCategoryController } from './application/controllers/sub-category.controller';
 import { EntryController } from './application/controllers/entry.controller';
 import { BalanceController } from './application/controllers/balance.controller';
+import authenticationMiddleware from './application/middlewares/authentication.middleware';
 
 class Server {
   private app: express.Application;
@@ -30,6 +31,7 @@ class Server {
 
   public async registerRoutes() {
     this.app.use(express.json());
+    this.app.use(authenticationMiddleware);
     this.app.use('/v1/categorias', this.categoryController.router);
     this.app.use('/v1/subcategorias', this.subCategoryController.router);
     this.app.use('/v1/lancamentos', this.entryController.router);
