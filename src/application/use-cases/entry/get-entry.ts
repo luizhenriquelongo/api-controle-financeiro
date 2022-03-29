@@ -1,4 +1,5 @@
 import { IEntriesRepository } from '../../repositories/entries.repository';
+import APIException from '../../exceptions/api.exception';
 
 type GetEntryUseCaseRequest = {
   entryId: number;
@@ -10,7 +11,11 @@ export class GetEntryUseCase {
     const entry = await this.entriesRepository.findEntryById(entryId);
 
     if (!entry) {
-      throw new Error('Entry not found.');
+      return new APIException(
+        404,
+        [`Lancamento com id ${entryId} não existe.`],
+        'recurso_nao_encontrado'
+      );
     }
 
     return entry;

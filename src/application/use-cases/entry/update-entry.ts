@@ -1,15 +1,21 @@
 import { IEntriesRepository } from '../../repositories/entries.repository';
+import Decimal from 'decimal.js';
+import APIException from '../../exceptions/api.exception';
+import { ISubCategoriesRepository } from '../../repositories/sub-categories.repository';
 
-type UpdateEntryUseCaseRequest = {
+export type UpdateEntryUseCaseRequest = {
   entryId: number;
-  value?: number;
+  value?: Decimal;
   date?: Date;
   subCategoryId?: number;
   comment?: string;
 };
 
 export class UpdateEntryUseCase {
-  constructor(private entriesRepository: IEntriesRepository) {}
+  constructor(
+    private entriesRepository: IEntriesRepository,
+    private subCategoriesRepository: ISubCategoriesRepository
+  ) {}
   async execute({
     entryId,
     value,
@@ -20,17 +26,34 @@ export class UpdateEntryUseCase {
     const entry = await this.entriesRepository.findEntryById(entryId);
 
     if (!entry) {
-      throw new Error("Can't update entry because entry do not exists.");
+      return new APIException(
+        404,
+        [`Lancamento com id ${entryId} não existe.`],
+        'recurso_nao_encontrado'
+      );
     }
 
-    const updatedEntry = await this.entriesRepository.updateEntryById({
+    if (subCategoryId) {
+      const subCategory =
+        await this.subCategoriesRepository.findSubCategoryById(subCategoryId);
+
+      if (!subCategory) {
+        return new APIException(
+          404,
+          [
+            `Não foi possível editar lancamento: sub categoria com id ${subCategoryId} não existe.`
+          ],
+          'recurso_nao_encontrado'
+        );
+      }
+    }
+
+    return await this.entriesRepository.updateEntryById({
       entryId: entry.props.entryId,
       value,
       date,
       subCategoryId,
       comment
     });
-
-    return updatedEntry;
   }
 }

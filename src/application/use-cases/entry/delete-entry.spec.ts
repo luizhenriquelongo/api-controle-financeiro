@@ -1,13 +1,15 @@
 import { InMemoryEntriesRepository } from '../../../../tests/repositories/in-memory-entries-repository';
 import { EntryEntity } from '../../../domain/entities/entry';
 import { DeleteEntryUseCase } from './delete-entry';
+import Decimal from 'decimal.js';
+import APIException from '../../exceptions/api.exception';
 
 describe('Delete entry use case', () => {
   it('should be able to delete an existent entry', async () => {
     const repository = new InMemoryEntriesRepository();
     const storedEntry = EntryEntity.create({
       entryId: 1,
-      value: 12,
+      value: new Decimal(12),
       date: new Date(),
       subCategoryId: 2,
       comment: 'some comment'
@@ -27,7 +29,7 @@ describe('Delete entry use case', () => {
     const repository = new InMemoryEntriesRepository();
     const storedEntry = EntryEntity.create({
       entryId: 1,
-      value: 12,
+      value: new Decimal(12),
       date: new Date(),
       subCategoryId: 2,
       comment: 'some comment'
@@ -37,9 +39,8 @@ describe('Delete entry use case', () => {
     expect(repository.items.length).toBe(1);
     const useCase = new DeleteEntryUseCase(repository);
 
-    await expect(async () => {
-      await useCase.execute({ entryId: 2 });
-    }).rejects.toThrow("Can't delete entry because entry do not exists.");
+    const result = await useCase.execute({ entryId: 2 });
+    expect(result).toBeInstanceOf(APIException);
     expect(repository.items.length).toBe(1);
   });
 });

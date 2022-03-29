@@ -3,7 +3,7 @@ import { GetSubCategoriesFilter } from '../use-cases/sub-categories/types';
 import { postgresDataSource } from '../../database/data-source';
 import { CategoryDBEntity } from '../../database/entities/category.entity';
 import { SubCategoryDBEntity } from '../../database/entities/sub-category.entity';
-import { FindOperator, Like } from 'typeorm';
+import { FindOperator, ILike } from 'typeorm';
 import APIException from '../exceptions/api.exception';
 
 export type UpdateSubCategoryProps = {
@@ -127,7 +127,7 @@ export class SubCategoriesPostgresRepository
     filters: GetSubCategoriesFilter
   ): Promise<SubCategoryEntity[]> {
     const where: { name?: FindOperator<string>; id?: number } = {};
-    if (filters.name) where.name = Like(`%${filters.name}%`);
+    if (filters.name) where.name = ILike(`%${filters.name}%`);
     if (filters.subCategoryId) where.id = filters.subCategoryId;
 
     const subCategories = await postgresDataSource

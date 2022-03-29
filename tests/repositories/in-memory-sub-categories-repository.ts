@@ -17,19 +17,22 @@ export class InMemorySubCategoriesRepository
   async getSubCategoriesWithFilters(
     filters: GetSubCategoriesFilter
   ): Promise<SubCategoryEntity[]> {
-    return this.items.filter((category) => {
-      const includesName = (name: string) => category.props.name.includes(name);
-      const isTheSameId = (id: number) => category.props.subCategoryId === id;
+    const filteringFunctions = {
+      subCategoryId: (
+        filters: GetSubCategoriesFilter,
+        subCategory: SubCategoryEntity
+      ) => subCategory.props.subCategoryId === filters.subCategoryId,
+      name: (filters: GetSubCategoriesFilter, subCategory: SubCategoryEntity) =>
+        subCategory.props.name.includes(<string>filters.name)
+    };
 
-      if (!filters.name && filters.subCategoryId)
-        return isTheSameId(filters.subCategoryId);
-      if (filters.name && !filters.subCategoryId)
-        return includesName(filters.name);
-
-      return (
-        isTheSameId(<number>filters.subCategoryId) &&
-        includesName(<string>filters.name)
-      );
+    return this.items.filter((subCategory) => {
+      const results: boolean[] = [];
+      if (filters.name)
+        results.push(filteringFunctions.name(filters, subCategory));
+      if (filters.subCategoryId)
+        results.push(filteringFunctions.subCategoryId(filters, subCategory));
+      return results.every(Boolean);
     });
   }
 

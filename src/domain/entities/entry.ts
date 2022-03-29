@@ -1,11 +1,12 @@
 import { Entity } from '../../core/domain/Entity';
+import Decimal from 'decimal.js';
 
 export type EntryProps = {
   entryId: number;
-  value: number;
+  value: Decimal;
   date: Date;
   subCategoryId: number;
-  comment: string;
+  comment: string | null;
 };
 
 export class EntryEntity extends Entity<EntryProps> {
@@ -21,7 +22,7 @@ export class EntryEntity extends Entity<EntryProps> {
     return {
       id_lancamento: this.props.entryId,
       valor: this.props.value,
-      data: this.props.date.toLocaleDateString(),
+      data: this.props.date.toLocaleDateString('pt-BR'),
       id_subcategoria: this.props.subCategoryId,
       comentario: this.props.comment
     };

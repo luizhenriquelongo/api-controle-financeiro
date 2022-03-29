@@ -1,13 +1,15 @@
 import { InMemoryEntriesRepository } from '../../../../tests/repositories/in-memory-entries-repository';
 import { EntryEntity } from '../../../domain/entities/entry';
 import { GetEntryUseCase } from './get-entry';
+import Decimal from 'decimal.js';
+import APIException from '../../exceptions/api.exception';
 
 describe('Get entry use case', () => {
   it('should be able to get an entry', async () => {
     const repository = new InMemoryEntriesRepository();
     const storedEntry = EntryEntity.create({
       entryId: 1,
-      value: 12,
+      value: new Decimal(12),
       date: new Date(),
       subCategoryId: 2,
       comment: 'some comment'
@@ -27,7 +29,7 @@ describe('Get entry use case', () => {
     const repository = new InMemoryEntriesRepository();
     const storedEntry = EntryEntity.create({
       entryId: 1,
-      value: 12,
+      value: new Decimal(12),
       date: new Date(),
       subCategoryId: 2,
       comment: 'some comment'
@@ -36,8 +38,7 @@ describe('Get entry use case', () => {
 
     const useCase = new GetEntryUseCase(repository);
 
-    await expect(async () => {
-      await useCase.execute({ entryId: 2 });
-    }).rejects.toThrow('Entry not found.');
+    const result = await useCase.execute({ entryId: 2 });
+    expect(result).toBeInstanceOf(APIException);
   });
 });

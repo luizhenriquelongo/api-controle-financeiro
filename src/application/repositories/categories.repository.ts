@@ -2,7 +2,7 @@ import { CategoryEntity, CategoryProps } from '../../domain/entities/category';
 import { postgresDataSource } from '../../database/data-source';
 import { CategoryDBEntity } from '../../database/entities/category.entity';
 import { GetCategoriesFilter } from '../use-cases/categories/types';
-import { Like } from 'typeorm';
+import { ILike } from 'typeorm';
 
 export interface ICategoriesRepository {
   createCategory({ name }: { name: string }): Promise<CategoryEntity>;
@@ -97,7 +97,7 @@ export class CategoriesPostgresRepository implements ICategoriesRepository {
   ): Promise<CategoryEntity[]> {
     const categories = await postgresDataSource
       .getRepository(CategoryDBEntity)
-      .findBy({ name: Like(`%${filters.name}%`) });
+      .findBy({ name: ILike(`%${filters.name}%`) });
 
     return categories.map((category) =>
       CategoryEntity.create({

@@ -1,24 +1,41 @@
 import { IEntriesRepository } from '../../repositories/entries.repository';
+import Decimal from 'decimal.js';
+import { ISubCategoriesRepository } from '../../repositories/sub-categories.repository';
+import APIException from '../../exceptions/api.exception';
 
-type CreateEntryUseCaseRequest = {
-  entryId: number;
-  value: number;
-  date: Date;
+export type CreateEntryUseCaseRequest = {
+  value: Decimal;
+  date?: Date;
   subCategoryId: number;
-  comment: string;
+  comment?: string;
 };
 
 export class CreateEntryUseCase {
-  constructor(private entriesRepository: IEntriesRepository) {}
+  constructor(
+    private entriesRepository: IEntriesRepository,
+    private subCategoriesRepository: ISubCategoriesRepository
+  ) {}
   async execute({
-    entryId,
     value,
     date,
     subCategoryId,
     comment
   }: CreateEntryUseCaseRequest) {
+    const subCategory = await this.subCategoriesRepository.findSubCategoryById(
+      subCategoryId
+    );
+
+    if (!subCategory) {
+      return new APIException(
+        404,
+        [
+          `Não foi possível criar lancamento: sub categoria com id ${subCategoryId} não existe.`
+        ],
+        'recurso_nao_encontrado'
+      );
+    }
+
     const entry = await this.entriesRepository.createEntry({
-      entryId,
       value,
       date,
       subCategoryId,

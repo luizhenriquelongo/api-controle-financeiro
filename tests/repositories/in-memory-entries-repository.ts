@@ -3,18 +3,53 @@ import {
   UpdateEntryProps
 } from '../../src/application/repositories/entries.repository';
 import { GetBalanceByPeriodUseCaseRequest } from '../../src/application/use-cases/balance/get-balance-by-period';
-import { EntryProps, EntryEntity } from '../../src/domain/entities/entry';
+import { EntryEntity } from '../../src/domain/entities/entry';
+import Decimal from 'decimal.js';
+import { GetEntriesFilter } from '../../src/application/use-cases/entry/types';
 
 export class InMemoryEntriesRepository implements IEntriesRepository {
   public items: EntryEntity[] = [];
 
+  async getEntriesWithFilters(
+    filters: GetEntriesFilter
+  ): Promise<EntryEntity[]> {
+    const filteringFunctions = {
+      subCategoryId: (filters: GetEntriesFilter, entry: EntryEntity) =>
+        entry.props.subCategoryId === filters.subCategoryId,
+      start_date: (filters: GetEntriesFilter, entry: EntryEntity) =>
+        (filters.start_date as Date) <= entry.props.date,
+      end_date: (filters: GetEntriesFilter, entry: EntryEntity) =>
+        (filters.end_date as Date) >= entry.props.date
+    };
+
+    return this.items.filter((entry) => {
+      const results: boolean[] = [];
+
+      if (filters.subCategoryId)
+        results.push(filteringFunctions.subCategoryId(filters, entry));
+      if (filters.start_date)
+        results.push(filteringFunctions.start_date(filters, entry));
+      if (filters.end_date)
+        results.push(filteringFunctions.end_date(filters, entry));
+
+      return results.every(Boolean);
+    });
+  }
+
   async createEntry({
-    entryId,
     value,
     date,
     subCategoryId,
     comment
-  }: EntryProps): Promise<EntryEntity> {
+  }: {
+    value: Decimal;
+    date: Date;
+    subCategoryId: number;
+    comment: string;
+  }): Promise<EntryEntity> {
+    const entryId =
+      this.items.length > 0 ? this.items[-1].props.entryId + 1 : 1;
+
     const entry = EntryEntity.create({
       entryId,
       value,

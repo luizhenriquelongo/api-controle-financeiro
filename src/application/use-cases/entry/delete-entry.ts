@@ -1,4 +1,5 @@
 import { IEntriesRepository } from '../../repositories/entries.repository';
+import APIException from '../../exceptions/api.exception';
 
 type DeleteEntryUseCaseRequest = {
   entryId: number;
@@ -10,9 +11,14 @@ export class DeleteEntryUseCase {
     const entry = await this.entriesRepository.findEntryById(entryId);
 
     if (!entry) {
-      throw new Error("Can't delete entry because entry do not exists.");
+      return new APIException(
+        404,
+        [`Lancamento com id ${entryId} não existe.`],
+        'recurso_nao_encontrado'
+      );
     }
 
     await this.entriesRepository.deleteEntryById(entryId);
+    return null;
   }
 }
