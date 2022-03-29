@@ -1,7 +1,7 @@
 import { EntryEntity } from '../../../domain/entities/entry';
 import { getInMemoryEntriesRepository } from '../../../../tests/repositories/utils';
 import { GetBalanceByPeriodUseCase } from './get-balance-by-period';
-import Decimal from "decimal.js";
+import Decimal from 'decimal.js';
 
 describe('Get balance by period use case', () => {
   it('should be able to get a balance', async () => {

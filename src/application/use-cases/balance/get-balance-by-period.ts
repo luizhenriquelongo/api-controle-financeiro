@@ -1,6 +1,6 @@
 import { IEntriesRepository } from '../../repositories/entries.repository';
 import { BalanceEntity } from '../../../domain/entities/balance';
-import Decimal from "decimal.js";
+import Decimal from 'decimal.js';
 
 export type GetBalanceByPeriodUseCaseRequest = {
   startDate: Date;

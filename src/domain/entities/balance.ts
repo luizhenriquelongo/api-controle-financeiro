@@ -30,7 +30,7 @@ export class BalanceEntity extends Entity<BalanceProps> {
     } = {
       receita: this.props.income,
       despesa: this.props.expense,
-      saldo: this.props.balance,
+      saldo: this.props.balance
     };
 
     if (this.props.category)

@@ -1,5 +1,4 @@
 import { Router, Response, Request, NextFunction } from 'express';
-import { CategoriesPostgresRepository } from '../repositories/categories.repository';
 import APIException from '../exceptions/api.exception';
 import methodNotAllowed from '../middlewares/method-not-allowed.middleware';
 import { SubCategoriesPostgresRepository } from '../repositories/sub-categories.repository';

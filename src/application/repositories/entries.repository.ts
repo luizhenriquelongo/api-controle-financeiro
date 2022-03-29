@@ -11,7 +11,6 @@ import {
   LessThanOrEqual,
   MoreThanOrEqual
 } from 'typeorm';
-import APIException from '../exceptions/api.exception';
 
 export type UpdateEntryProps = {
   entryId: number;
@@ -195,6 +194,7 @@ export class EntriesPostgresRepository implements IEntriesRepository {
   async getEntriesWithFilters(
     filters: GetEntriesFilter
   ): Promise<EntryEntity[]> {
+    // eslint-disable-next-line
     const where: { date?: FindOperator<any>; subcategory_id?: number } = {};
     if (filters.start_date && filters.end_date)
       where.date = Between(filters.start_date, filters.end_date);
