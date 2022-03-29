@@ -7,6 +7,9 @@ import { SubCategoryController } from './application/controllers/sub-category.co
 import { EntryController } from './application/controllers/entry.controller';
 import { BalanceController } from './application/controllers/balance.controller';
 import authenticationMiddleware from './application/middlewares/authentication.middleware';
+import swaggerDocs from './swagger.json';
+import swaggerUi from 'swagger-ui-express';
+import cors from 'cors';
 
 class Server {
   private app: express.Application;
@@ -31,14 +34,22 @@ class Server {
 
   public async registerRoutes() {
     this.app.use(express.json());
+    this.app.use(cors());
+
+    this.app.get('/', (req: Request, res: Response) =>
+      res.redirect('/v1/docs')
+    );
+    this.app.use(
+      '/v1/docs',
+      swaggerUi.serve,
+      swaggerUi.setup(swaggerDocs, { explorer: true })
+    );
     this.app.use(authenticationMiddleware);
     this.app.use('/v1/categorias', this.categoryController.router);
     this.app.use('/v1/subcategorias', this.subCategoryController.router);
     this.app.use('/v1/lancamentos', this.entryController.router);
     this.app.use('/v1/balanco', this.balanceController.router);
-    this.app.get('/', (req: Request, res: Response) => {
-      res.send('Home Page!');
-    });
+
     this.app.get('/health', (req: Request, res: Response) => {
       res.send({ response: 'ok' });
     });

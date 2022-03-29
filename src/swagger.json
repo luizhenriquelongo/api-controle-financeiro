@@ -1,0 +1,1593 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "0.1.0",
+    "title": "API de Controle Financeiro",
+    "description": "API para controle financeiro.",
+    "contact": {
+      "name": "Luiz Henrique Longo",
+      "url": "https://github.com/luizhenriquelongo",
+      "email": "longo.luizh@gmail.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://spdx.org/licenses/MIT.html"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/v1/",
+      "description": "API de Teste (local)"
+    },
+    {
+      "url": "http://localhost:3000/v1/",
+      "description": "API Heroku"
+    }
+  ],
+  "paths": {
+    "/categorias": {
+      "post": {
+        "summary": "Cadastro de categoria",
+        "description": "Rota responsável pelo cadastro de uma nova categoria",
+        "tags": ["Categorias"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Categoria"
+              },
+              "examples": {
+                "Categoria": {
+                  "value": {
+                    "nome": "Casa"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Objeto Criado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Categoria"
+                },
+                "examples": {
+                  "Categoria": {
+                    "value": {
+                      "id_categoria": 1,
+                      "nome": "Casa"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Requisição Não Autorizada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "API Key Inválida": {
+                    "value": {
+                      "codigo": "erro_autenticacao",
+                      "mensagens": ["api-key inválida"]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Buscar categorias",
+        "description": "Rota responsável por buscar categorias",
+        "tags": ["Categorias"],
+        "parameters": [
+          {
+            "name": "nome",
+            "in": "query",
+            "style": "form",
+            "description": "O nome da categoria a ser buscada (Suporta busca parcial)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Categoria" }
+                },
+                "examples": {
+                  "Categorias": {
+                    "value": [
+                      {
+                        "id_categoria": 1,
+                        "nome": "Casa"
+                      },
+                      {
+                        "id_categoria": 2,
+                        "nome": "Mercado"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Requisição Não Autorizada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "API Key Inválida": {
+                    "value": {
+                      "codigo": "erro_autenticacao",
+                      "mensagens": ["api-key inválida"]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/categorias/{id}": {
+      "get": {
+        "summary": "Buscar categoria pelo ID",
+        "description": "Rota responsável por buscar uma categoria pelo seu ID",
+        "tags": ["Categorias"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "form",
+            "description": "O ID da categoria a ser buscada",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Categoria"
+                },
+                "examples": {
+                  "Categorias": {
+                    "value": {
+                      "id_categoria": 1,
+                      "nome": "Casa"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Requisição Não Autorizada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "API Key Inválida": {
+                    "value": {
+                      "codigo": "erro_autenticacao",
+                      "mensagens": ["api-key inválida"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso Não Encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "Categoria Inexistente": {
+                    "value": {
+                      "codigo": "recurso_nao_encontrado",
+                      "mensagens": ["Categoria com id 1 não existe."]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Editar categoria",
+        "description": "Rota responsável pela edição de uma categoria",
+        "tags": ["Categorias"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "form",
+            "description": "O ID da categoria a ser alterada",
+            "schema": {
+              "type": "number"
+            },
+            "examples": {
+              "ID Categoria": {
+                "value": 1
+              }
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Categoria"
+              },
+              "examples": {
+                "Categoria": {
+                  "value": {
+                    "nome": "Mercado"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Categoria"
+                },
+                "examples": {
+                  "Categorias": {
+                    "value": {
+                      "id_categoria": 1,
+                      "nome": "Casa"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Requisição Não Autorizada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "API Key Inválida": {
+                    "value": {
+                      "codigo": "erro_autenticacao",
+                      "mensagens": ["api-key inválida"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso Não Encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "Categoria Inexistente": {
+                    "value": {
+                      "codigo": "recurso_nao_encontrado",
+                      "mensagens": ["Categoria com id 1 não existe."]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remover categoria",
+        "description": "Rota responsável pela remoção de uma categoria",
+        "tags": ["Categorias"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "form",
+            "description": "O ID da categoria a ser removida",
+            "schema": {
+              "type": "number"
+            },
+            "examples": {
+              "ID Categoria": {
+                "value": 1
+              }
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Objeto Removido"
+          },
+          "401": {
+            "description": "Requisição Não Autorizada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "API Key Inválida": {
+                    "value": {
+                      "codigo": "erro_autenticacao",
+                      "mensagens": ["api-key inválida"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso Não Encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "Categoria Inexistente": {
+                    "value": {
+                      "codigo": "recurso_nao_encontrado",
+                      "mensagens": ["Categoria com id 1 não existe."]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/subcategorias": {
+      "post": {
+        "summary": "Cadastro de subcategoria",
+        "description": "Rota responsável pelo cadastro de uma nova subcategoria",
+        "tags": ["Subcategorias"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Subcategoria"
+              },
+              "examples": {
+                "Subcategoria": {
+                  "value": {
+                    "nome": "Contas",
+                    "id_categoria": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Objeto Criado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Subcategoria"
+                },
+                "examples": {
+                  "Categoria": {
+                    "value": {
+                      "id_subcategoria": 1,
+                      "nome": "Contas",
+                      "id_categoria": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Requisição Não Autorizada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "API Key Inválida": {
+                    "value": {
+                      "codigo": "erro_autenticacao",
+                      "mensagens": ["api-key inválida"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso Não Encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "Categoria Inexistente": {
+                    "value": {
+                      "codigo": "recurso_nao_encontrado",
+                      "mensagens": [
+                        "Não foi possível criar subcategoria: categoria com id 1 não existe."
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Buscar Subcategorias",
+        "description": "Rota responsável por buscar subcategorias",
+        "tags": ["Subcategorias"],
+        "parameters": [
+          {
+            "name": "nome",
+            "in": "query",
+            "style": "form",
+            "description": "O nome da subcategoria a ser buscada (Suporta busca parcial)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id_subcategoria",
+            "in": "query",
+            "style": "form",
+            "description": "O ID da subcategoria a ser buscada",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Subcategoria" }
+                },
+                "examples": {
+                  "Subcategorias": {
+                    "value": [
+                      {
+                        "id_subcategoria": 1,
+                        "nome": "Contas",
+                        "id_categoria": 1
+                      },
+                      {
+                        "id_subcategoria": 2,
+                        "nome": "Reparos",
+                        "id_categoria": 1
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de Validacão",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "Erro Validacao": {
+                    "value": {
+                      "codigo": "erro_validacao",
+                      "mensagens": [
+                        "O campo 'id_subcategoria' deve ser um número inteiro."
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Requisição Não Autorizada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "API Key Inválida": {
+                    "value": {
+                      "codigo": "erro_autenticacao",
+                      "mensagens": ["api-key inválida"]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/subcategorias/{id}": {
+      "get": {
+        "summary": "Buscar subcategoria pelo ID",
+        "description": "Rota responsável por buscar uma subcategoria pelo seu ID",
+        "tags": ["Subcategorias"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "form",
+            "description": "O ID da subcategoria a ser buscada",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Subcategoria"
+                },
+                "examples": {
+                  "Subcategoria": {
+                    "value": {
+                      "id_subcategoria": 1,
+                      "nome": "Contas",
+                      "id_categoria": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de Validacão",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "Erro Validacao": {
+                    "value": {
+                      "codigo": "erro_validacao",
+                      "mensagens": [
+                        "O id da sub categoria deve ser um número inteiro"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Requisição Não Autorizada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "API Key Inválida": {
+                    "value": {
+                      "codigo": "erro_autenticacao",
+                      "mensagens": ["api-key inválida"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso Não Encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "Subcategoria Inexistente": {
+                    "value": {
+                      "codigo": "recurso_nao_encontrado",
+                      "mensagens": ["Subcategoria com id 1 não existe."]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Editar Subcategoria",
+        "description": "Rota responsável pela edição de uma subcategoria",
+        "tags": ["Subcategorias"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "form",
+            "description": "O ID da subcategoria a ser alterada",
+            "schema": {
+              "type": "number"
+            },
+            "examples": {
+              "ID Categoria": {
+                "value": 1
+              }
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Subcategoria"
+              },
+              "examples": {
+                "Subcategoria": {
+                  "value": {
+                    "nome": "Mercado"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Subcategoria"
+                },
+                "examples": {
+                  "Subcategoria": {
+                    "value": {
+                      "id_subcategoria": 1,
+                      "nome": "Contas",
+                      "id_categoria": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de Validacão",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "Erro Validacao": {
+                    "value": {
+                      "codigo": "erro_validacao",
+                      "mensagens": [
+                        "O id da sub categoria deve ser um número inteiro"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Requisição Não Autorizada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "API Key Inválida": {
+                    "value": {
+                      "codigo": "erro_autenticacao",
+                      "mensagens": ["api-key inválida"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso Não Encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "Subcategoria Inexistente": {
+                    "value": {
+                      "codigo": "recurso_nao_encontrado",
+                      "mensagens": ["Subcategoria com id 1 não existe."]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remover Subcategoria",
+        "description": "Rota responsável pela remoção de uma subcategoria",
+        "tags": ["Subcategorias"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "form",
+            "description": "O ID da subcategoria a ser removida",
+            "schema": {
+              "type": "number"
+            },
+            "examples": {
+              "ID Categoria": {
+                "value": 1
+              }
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Objeto Removido"
+          },
+          "400": {
+            "description": "Erro de Validacão",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "Erro Validacao": {
+                    "value": {
+                      "codigo": "erro_validacao",
+                      "mensagens": [
+                        "O id da sub categoria deve ser um número inteiro"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Requisição Não Autorizada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "API Key Inválida": {
+                    "value": {
+                      "codigo": "erro_autenticacao",
+                      "mensagens": ["api-key inválida"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso Não Encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "Subcategoria Inexistente": {
+                    "value": {
+                      "codigo": "recurso_nao_encontrado",
+                      "mensagens": ["Subcategoria com id 1 não existe."]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/lancamentos": {
+      "post": {
+        "summary": "Cadastro de lancamento",
+        "description": "Rota responsável pelo cadastro de uma nova lancamento",
+        "tags": ["Lancamentos"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Lancamento"
+              },
+              "examples": {
+                "Lancamento": {
+                  "value": {
+                    "valor": 22.5,
+                    "data": "29/03/2022",
+                    "comentario": "Padaria",
+                    "id_subcategoria": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Objeto Criado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Lancamento"
+                },
+                "examples": {
+                  "Lancamento": {
+                    "value": {
+                      "id_lancamento": 1,
+                      "valor": -22.5,
+                      "data": "29/03/2022",
+                      "comentario": "Padaria",
+                      "id_subcategoria": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de Validacão",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "Erro Validacao": {
+                    "value": {
+                      "codigo": "erro_validacao",
+                      "mensagens": [
+                        "o campo 'valor' é obrigatório"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Requisição Não Autorizada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "API Key Inválida": {
+                    "value": {
+                      "codigo": "erro_autenticacao",
+                      "mensagens": ["api-key inválida"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso Não Encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "Subcategoria Inexistente": {
+                    "value": {
+                      "codigo": "recurso_nao_encontrado",
+                      "mensagens": [
+                        "Não foi possível criar lancamento: sub categoria com id 1 não existe."
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Buscar lancamentos",
+        "description": "Rota responsável por buscar lancamentos",
+        "tags": ["Lancamentos"],
+        "parameters": [
+          {
+            "name": "id_subcategoria",
+            "in": "query",
+            "style": "form",
+            "description": "O ID da subcategoria a qual os lancamentos devem pertencer",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "data_inicio",
+            "in": "query",
+            "style": "form",
+            "description": "O data a partir da qual os lancamentos devem partir",
+            "schema": {
+              "type": "string",
+              "format": "DD/MM/YYYY"
+            }
+          },
+          {
+            "name": "data_fim",
+            "in": "query",
+            "style": "form",
+            "description": "O data a partir da qual os lancamentos devem ir até",
+            "schema": {
+              "type": "string",
+              "format": "DD/MM/YYYY"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Lancamento" }
+                },
+                "examples": {
+                  "Subcategorias": {
+                    "value": [
+                      {
+                      "id_lancamento": 1,
+                      "valor": -22.5,
+                      "data": "29/03/2022",
+                      "comentario": "Padaria",
+                      "id_subcategoria": 1
+                    },
+                      {
+                      "id_lancamento": 2,
+                      "valor": -10.5,
+                      "data": "28/03/2022",
+                      "comentario": "Mercado",
+                      "id_subcategoria": 2
+                    }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de Validacão",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "Erro Validacao": {
+                    "value": {
+                      "codigo": "erro_validacao",
+                      "mensagens": [
+                        "O campo 'data_inicio' deve ser uma data válida"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Requisição Não Autorizada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "API Key Inválida": {
+                    "value": {
+                      "codigo": "erro_autenticacao",
+                      "mensagens": ["api-key inválida"]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/lancamentos/{id}": {
+      "get": {
+        "summary": "Buscar lancamento pelo ID",
+        "description": "Rota responsável por buscar um lancamento pelo seu ID",
+        "tags": ["Lancamentos"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "form",
+            "description": "O ID do lancamento a ser buscada",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Lancamento"
+                },
+                "examples": {
+                  "Lancamento": {
+                  "value": {
+                    "id_lancamento": 1,
+                    "valor": 22.5,
+                    "data": "29/03/2022",
+                    "comentario": "Padaria",
+                    "id_subcategoria": 1
+                  }
+                }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de Validacão",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "Erro Validacao": {
+                    "value": {
+                      "codigo": "erro_validacao",
+                      "mensagens": [
+                        "O id do lancamento deve ser um número inteiro"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Requisição Não Autorizada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "API Key Inválida": {
+                    "value": {
+                      "codigo": "erro_autenticacao",
+                      "mensagens": ["api-key inválida"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso Não Encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "Lancamento Inexistente": {
+                    "value": {
+                      "codigo": "recurso_nao_encontrado",
+                      "mensagens": ["Lancamento com id 1 não existe."]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Editar Lancamento",
+        "description": "Rota responsável pela edição de uma lancamento",
+        "tags": ["Lancamentos"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "form",
+            "description": "O ID do lancamento a ser alterada",
+            "schema": {
+              "type": "number"
+            },
+            "examples": {
+              "ID Lancamento": {
+                "value": 1
+              }
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Lancamento"
+              },
+              "examples": {
+                "Lancamento": {
+                  "value": {
+                    "valor": 22.5,
+                    "data": "29/03/2022",
+                    "comentario": "Padaria",
+                    "id_subcategoria": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Lancamento"
+                },
+                "examples": {
+                  "Lancamento": {
+                    "value": {
+                    "id_lancamento": 1,
+                    "valor": 22.5,
+                    "data": "29/03/2022",
+                    "comentario": "Padaria",
+                    "id_subcategoria": 1
+                  }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de Validacão",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "Erro Validacao": {
+                    "value": {
+                      "codigo": "erro_validacao",
+                      "mensagens": [
+                        "Não foi possível editar lancamento: sub categoria com id 1 não existe."
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Requisição Não Autorizada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "API Key Inválida": {
+                    "value": {
+                      "codigo": "erro_autenticacao",
+                      "mensagens": ["api-key inválida"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso Não Encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "Subcategoria Inexistente": {
+                    "value": {
+                      "codigo": "recurso_nao_encontrado",
+                      "mensagens": ["Lancamento com id 1 não existe."]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remover Lancamento",
+        "description": "Rota responsável pela remoção de um lancamento",
+        "tags": ["Lancamentos"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "form",
+            "description": "O ID do lancamento a ser removido",
+            "schema": {
+              "type": "number"
+            },
+            "examples": {
+              "ID Categoria": {
+                "value": 1
+              }
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Objeto Removido"
+          },
+          "400": {
+            "description": "Erro de Validacão",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "Erro Validacao": {
+                    "value": {
+                      "codigo": "erro_validacao",
+                      "mensagens": [
+                        "O id do lancamento deve ser um número inteiro"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Requisição Não Autorizada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "API Key Inválida": {
+                    "value": {
+                      "codigo": "erro_autenticacao",
+                      "mensagens": ["api-key inválida"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso Não Encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "Lancamento Inexistente": {
+                    "value": {
+                      "codigo": "recurso_nao_encontrado",
+                      "mensagens": ["Lancamento com id 1 não existe."]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/balanco": {
+            "get": {
+        "summary": "Buscar o balanco com base em filtros",
+        "description": "Rota responsável por buscar o balanco utilizando filtros",
+        "tags": ["Balanco"],
+        "parameters": [
+          {
+            "name": "id_categoria",
+            "in": "query",
+            "style": "form",
+            "description": "O ID da categoria a qual o balanco devera ser realizado",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "data_inicio",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "description": "O data a partir da qual o balanco devera ser realizado",
+            "schema": {
+              "type": "string",
+              "format": "DD/MM/YYYY"
+            }
+          },
+          {
+            "name": "data_fim",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "description": "O data até a qual o balanco devera ser realizado",
+            "schema": {
+              "type": "string",
+              "format": "DD/MM/YYYY"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Balanco"
+                },
+                "examples": {
+                  "Balanco sem categoria": {
+                    "value": {
+                      "receita": 10.5,
+                      "despesa": 5.5,
+                      "saldo": 5
+                    }
+                  },
+                    "Balanco com categoria": {
+                  "value": {
+                    "categoria": {
+                      "id_categoria": 1,
+                      "nome": "Casa"
+                    },
+                    "receita": 10.5,
+                    "despesa": 5.5,
+                    "saldo": 5
+                  }
+                }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de Validacão",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "Erro Validacao": {
+                    "value": {
+                      "codigo": "erro_validacao",
+                      "mensagens": [
+                        "O campo 'data_inicio' é obrigatório"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Requisição Não Autorizada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "API Key Inválida": {
+                    "value": {
+                      "codigo": "erro_autenticacao",
+                      "mensagens": ["api-key inválida"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso Não Encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                },
+                "examples": {
+                  "Categoria Inexistente": {
+                    "value": {
+                      "codigo": "recurso_nao_encontrado",
+                      "mensagens": ["Não foi possível pegar o balanco: categoria com id 1 não existe."]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Categoria": {
+        "type": "object",
+        "properties": {
+          "id_categoria": {
+            "type": "number"
+          },
+          "nome": {
+            "type": "string"
+          }
+        }
+      },
+      "Subcategoria": {
+        "type": "object",
+        "properties": {
+          "id_subcategoria": {
+            "type": "number"
+          },
+          "nome": {
+            "type": "string"
+          },
+          "id_categoria": {
+            "type": "number"
+          }
+        }
+      },
+      "Lancamento": {
+        "type": "object",
+        "properties": {
+          "id_lancamento": {
+            "type": "number"
+          },
+          "valor": {
+            "type": "number"
+          },
+          "data": {
+            "type": "string",
+            "format": "DD/MM/YYYY",
+            "description": "Se nenhuma data for inserida o sistema adotara a data atual do servidor."
+          },
+          "id_subcategoria": {
+            "type": "number"
+          },
+          "comentario": {
+            "type": "string"
+          }
+        }
+      },
+      "Balanco": {
+        "type": "object",
+        "properties": {
+          "receita": {
+            "type": "number"
+          },
+          "despesa": {
+            "type": "number"
+          },
+          "saldo": {
+            "type": "number"
+          },
+          "categoria": {
+            "type": "object",
+            "properties": {
+              "id_categoria": {
+                "type": "number"
+              },
+              "nome": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "Erro": {
+        "type": "object",
+        "properties": {
+          "codigo": {
+            "type": "string"
+          },
+          "mensagens": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "api-key"
+      }
+    }
+  },
+  "security": [{ "ApiKeyAuth": [] }]
+}

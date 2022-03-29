@@ -38,7 +38,7 @@ export class CreateEntriesTable1648517992244 implements MigrationInterface {
             columnNames: ['subcategory_id'],
             referencedTableName: 'subcategories',
             referencedColumnNames: ['id'],
-            onDelete: 'SET NULL'
+            onDelete: 'CASCADE'
           }
         ]
       })

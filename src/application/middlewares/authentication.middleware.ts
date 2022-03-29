@@ -9,7 +9,7 @@ function authenticationMiddleware(
 ) {
   const api_key = request.header('api-key');
   const message = api_key
-    ? 'api-key inválido'
+    ? 'api-key inválida'
     : 'uma api-key é obrigatória para realizar requisicoes';
   if (api_key !== API_KEY)
     return next(new APIException(401, [message], 'erro_autenticacao'));
