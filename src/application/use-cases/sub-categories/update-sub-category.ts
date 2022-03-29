@@ -1,5 +1,6 @@
 import { ICategoriesRepository } from '../../repositories/categories.repository';
 import { ISubCategoriesRepository } from '../../repositories/sub-categories.repository';
+import APIException from '../../exceptions/api.exception';
 
 type UpdateSubCategoryUseCaseRequest = {
   subCategoryId: number;
@@ -22,8 +23,12 @@ export class UpdateSubCategoryUseCase {
         categoryId
       );
       if (!category)
-        throw new Error(
-          `Can't update a sub category: category id ${categoryId} does not exists.`
+        return new APIException(
+          404,
+          [
+            `Não foi possível atualizar subcategoria: categoria com id ${categoryId} não existe.`
+          ],
+          'recurso_nao_encontrado'
         );
     }
     const subCategory = await this.subCategoriesRepository.findSubCategoryById(
@@ -31,8 +36,12 @@ export class UpdateSubCategoryUseCase {
     );
 
     if (!subCategory) {
-      throw new Error(
-        `Can't update sub category:  sub category id ${subCategoryId} does not exists.`
+      return new APIException(
+        404,
+        [
+          `Não foi possível atualizar subcategoria: Sub categoria com id ${subCategoryId} não existe.`
+        ],
+        'recurso_nao_encontrado'
       );
     }
 

@@ -34,6 +34,7 @@ class Server {
 
   public start() {
     this.app.listen(this.app.get('port'), () => {
+      // eslint-disable-next-line no-console
       console.log(`Server is listening ${this.app.get('port')} port.`);
     });
   }

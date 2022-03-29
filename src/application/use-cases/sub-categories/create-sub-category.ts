@@ -1,8 +1,8 @@
 import { ISubCategoriesRepository } from '../../repositories/sub-categories.repository';
 import { ICategoriesRepository } from '../../repositories/categories.repository';
+import APIException from '../../exceptions/api.exception';
 
 type CreateSubCategoryUseCaseRequest = {
-  subCategoryId: number;
   categoryId: number;
   name: string;
 };
@@ -12,21 +12,20 @@ export class CreateSubCategoryUseCase {
     private categoriesRepository: ICategoriesRepository,
     private subCategoriesRepository: ISubCategoriesRepository
   ) {}
-  async execute({
-    subCategoryId,
-    categoryId,
-    name
-  }: CreateSubCategoryUseCaseRequest) {
+  async execute({ categoryId, name }: CreateSubCategoryUseCaseRequest) {
     const category = await this.categoriesRepository.findCategoryById(
       categoryId
     );
     if (!category)
-      throw new Error(
-        `Can't create a sub category: category id ${categoryId} does not exists.`
+      return new APIException(
+        404,
+        [
+          `Não foi possível criar subcategoria: categoria com id ${categoryId} não existe.`
+        ],
+        'recurso_nao_encontrado'
       );
 
     return await this.subCategoriesRepository.createSubCategory({
-      subCategoryId,
       categoryId: category.props.categoryId,
       name
     });

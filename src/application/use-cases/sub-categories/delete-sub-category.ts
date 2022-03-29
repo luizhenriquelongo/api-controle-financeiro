@@ -1,4 +1,5 @@
 import { ISubCategoriesRepository } from '../../repositories/sub-categories.repository';
+import APIException from '../../exceptions/api.exception';
 
 type DeleteSubCategoryUseCaseRequest = {
   subCategoryId: number;
@@ -12,11 +13,16 @@ export class DeleteSubCategoryUseCase {
     );
 
     if (!subCategory) {
-      throw new Error(
-        "Can't delete sub category because sub category do not exists."
+      return new APIException(
+        404,
+        [
+          `Não foi possível excluir subcategoria: Sub categoria com id ${subCategoryId} não existe.`
+        ],
+        'recurso_nao_encontrado'
       );
     }
 
     await this.subCategoriesRepository.deleteSubCategoryById(subCategoryId);
+    return null;
   }
 }

@@ -1,3 +1,5 @@
+import { GetSubCategoriesFilter } from '../../src/application/use-cases/sub-categories/types';
+
 import {
   ISubCategoriesRepository,
   UpdateSubCategoryProps
@@ -11,6 +13,25 @@ export class InMemorySubCategoriesRepository
   implements ISubCategoriesRepository
 {
   public items: SubCategoryEntity[] = [];
+
+  async getSubCategoriesWithFilters(
+    filters: GetSubCategoriesFilter
+  ): Promise<SubCategoryEntity[]> {
+    return this.items.filter((category) => {
+      const includesName = (name: string) => category.props.name.includes(name);
+      const isTheSameId = (id: number) => category.props.subCategoryId === id;
+
+      if (!filters.name && filters.subCategoryId)
+        return isTheSameId(filters.subCategoryId);
+      if (filters.name && !filters.subCategoryId)
+        return includesName(filters.name);
+
+      return (
+        isTheSameId(<number>filters.subCategoryId) &&
+        includesName(<string>filters.name)
+      );
+    });
+  }
 
   async createSubCategory({
     subCategoryId,

@@ -1,5 +1,3 @@
-import { ValidationError } from 'express-validator';
-
 class APIException extends Error {
   status: number;
   errors: string[];
