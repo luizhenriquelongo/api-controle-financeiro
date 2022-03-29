@@ -5,6 +5,7 @@ import {
   getInMemoryCategoriesRepository,
   getInMemorySubCategoriesRepository
 } from '../../../../tests/repositories/utils';
+import APIException from '../../exceptions/api.exception';
 
 describe('Update sub category use case', () => {
   it('should be able to update an existent sub category', async () => {
@@ -42,8 +43,7 @@ describe('Update sub category use case', () => {
     });
 
     expect(subCategoriesRepository.items.length).toBe(1);
-    expect(response.props.name).toBe('Sub Category 2');
-    expect(response.props.categoryId).toBe(storedCategory2.props.categoryId);
+    expect(response).not.toBeInstanceOf(APIException);
   });
 
   test('should throw an error if no category was found', async () => {
@@ -69,16 +69,14 @@ describe('Update sub category use case', () => {
       subCategoriesRepository
     );
 
-    await expect(async () => {
-      await useCase.execute({
-        subCategoryId: 1,
-        categoryId: 2,
-        name: 'Sub Category 2'
-      });
-    }).rejects.toThrow(
-      "Can't update a sub category: category id 2 does not exists."
-    );
+    const result = await useCase.execute({
+      subCategoryId: 1,
+      categoryId: 2,
+      name: 'Sub Category 2'
+    });
+
     expect(subCategoriesRepository.items[0]).toStrictEqual(storedSubCategory);
+    expect(result).toBeInstanceOf(APIException);
   });
 
   test('should throw an error if no sub category was found', async () => {
@@ -105,14 +103,11 @@ describe('Update sub category use case', () => {
       subCategoriesRepository
     );
 
-    await expect(async () => {
-      await useCase.execute({
-        subCategoryId: 2,
-        name: 'Sub Category 3'
-      });
-    }).rejects.toThrow(
-      "Can't update sub category:  sub category id 2 does not exists."
-    );
+    const result = await useCase.execute({
+      subCategoryId: 2,
+      name: 'Sub Category 3'
+    });
+    expect(result).toBeInstanceOf(APIException);
     expect(subCategoriesRepository.items[0]).toStrictEqual(storedSubCategory);
   });
 });

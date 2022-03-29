@@ -34,10 +34,12 @@ export class InMemorySubCategoriesRepository
   }
 
   async createSubCategory({
-    subCategoryId,
     categoryId,
     name
   }: SubCategoryProps): Promise<SubCategoryEntity> {
+    const subCategoryId =
+      this.items.length > 0 ? this.items[-1].props.subCategoryId + 1 : 1;
+
     const subCategory = SubCategoryEntity.create({
       subCategoryId,
       categoryId,

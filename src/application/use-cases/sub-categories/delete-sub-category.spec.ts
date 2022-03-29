@@ -1,6 +1,7 @@
 import { getInMemorySubCategoriesRepository } from '../../../../tests/repositories/utils';
 import { SubCategoryEntity } from '../../../domain/entities/sub-category';
 import { DeleteSubCategoryUseCase } from './delete-sub-category';
+import APIException from '../../exceptions/api.exception';
 
 describe('Delete sub category use case', () => {
   it('should be able to delete an existent sub category', async () => {
@@ -34,11 +35,8 @@ describe('Delete sub category use case', () => {
     expect(repository.items.length).toBe(1);
     const useCase = new DeleteSubCategoryUseCase(repository);
 
-    await expect(async () => {
-      await useCase.execute({ subCategoryId: 2 });
-    }).rejects.toThrow(
-      "Can't delete sub category because sub category do not exists."
-    );
+    const result = await useCase.execute({ subCategoryId: 2 });
+    expect(result).toBeInstanceOf(APIException);
     expect(repository.items.length).toBe(1);
   });
 });

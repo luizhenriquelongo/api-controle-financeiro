@@ -1,6 +1,7 @@
 import { getInMemorySubCategoriesRepository } from '../../../../tests/repositories/utils';
 import { SubCategoryEntity } from '../../../domain/entities/sub-category';
 import { GetSubCategoryUseCase } from './get-sub-category';
+import APIException from '../../exceptions/api.exception';
 
 describe('Get sub category use case', () => {
   it('should be able to get a sub category', async () => {
@@ -27,8 +28,7 @@ describe('Get sub category use case', () => {
 
     const useCase = new GetSubCategoryUseCase(repository);
 
-    await expect(async () => {
-      await useCase.execute({ subCategoryId: 1 });
-    }).rejects.toThrow('Sub category not found.');
+    const result = await useCase.execute({ subCategoryId: 1 });
+    expect(result).toBeInstanceOf(APIException);
   });
 });
