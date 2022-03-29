@@ -2,6 +2,8 @@ import { IEntriesRepository } from '../../repositories/entries.repository';
 import { BalanceEntity } from '../../../domain/entities/balance';
 import { ICategoriesRepository } from '../../repositories/categories.repository';
 import { ISubCategoriesRepository } from '../../repositories/sub-categories.repository';
+import Decimal from 'decimal.js';
+import APIException from '../../exceptions/api.exception';
 
 export type GetBalanceByPeriodAndCategoryUseCaseRequest = {
   startDate: Date;
@@ -24,8 +26,12 @@ export class GetBalanceByPeriodAndCategoryUseCase {
       categoryId
     );
     if (!category)
-      throw new Error(
-        `Can't get a balance: category id ${categoryId} does not exists.`
+      return new APIException(
+        404,
+        [
+          `Não foi possível pegar o balanco: categoria com id ${categoryId} não existe.`
+        ],
+        'recurso_nao_encontrado'
       );
 
     const subCategories =
@@ -44,15 +50,17 @@ export class GetBalanceByPeriodAndCategoryUseCase {
       });
 
     const income = entries.reduce((partialSum, entity) => {
-      if (entity.props.value > 0) return partialSum + entity.props.value;
+      if (entity.props.value.toNumber() > 0)
+        return partialSum + entity.props.value.toNumber();
       return partialSum;
     }, 0);
     const expense = entries.reduce((partialSum, entity) => {
-      if (entity.props.value < 0) return partialSum + entity.props.value;
+      if (entity.props.value.toNumber() < 0)
+        return partialSum + entity.props.value.toNumber();
       return partialSum;
     }, 0);
     const balanceSum = entries.reduce(
-      (partialSum, entity) => partialSum + entity.props.value,
+      (partialSum, entity) => partialSum + entity.props.value.toNumber(),
       0
     );
 
@@ -61,9 +69,9 @@ export class GetBalanceByPeriodAndCategoryUseCase {
         categoryId: category.props.categoryId,
         name: category.props.name
       },
-      income,
-      expense,
-      balance: balanceSum
+      income: new Decimal(income),
+      expense: new Decimal(expense),
+      balance: new Decimal(balanceSum)
     });
   }
 }

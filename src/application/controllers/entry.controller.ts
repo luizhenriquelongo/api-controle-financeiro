@@ -24,13 +24,11 @@ import { parseDate } from '../utils';
 
 export class EntryController {
   public router: Router;
-  private categoriesRepository: CategoriesPostgresRepository;
   private subCategoriesRepository: SubCategoriesPostgresRepository;
   private entriesRepository: EntriesPostgresRepository;
 
   constructor() {
     this.router = Router();
-    this.categoriesRepository = new CategoriesPostgresRepository();
     this.subCategoriesRepository = new SubCategoriesPostgresRepository();
     this.entriesRepository = new EntriesPostgresRepository();
     this.registerRoutes();

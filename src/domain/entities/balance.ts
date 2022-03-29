@@ -1,11 +1,12 @@
 import { Entity } from '../../core/domain/Entity';
 import { CategoryProps } from './category';
+import Decimal from 'decimal.js';
 
 type BalanceProps = {
-  category: CategoryProps;
-  income: number;
-  expense: number;
-  balance: number;
+  category?: CategoryProps;
+  income: Decimal;
+  expense: Decimal;
+  balance: Decimal;
 };
 
 export class BalanceEntity extends Entity<BalanceProps> {
@@ -18,14 +19,25 @@ export class BalanceEntity extends Entity<BalanceProps> {
   }
 
   public toDisplay() {
-    return {
-      categoria: {
+    const response: {
+      receita: Decimal;
+      despesa: Decimal;
+      saldo: Decimal;
+      categoria?: {
+        id_categoria: number;
+        nome: string;
+      };
+    } = {
+      receita: this.props.income,
+      despesa: this.props.expense,
+      saldo: this.props.balance,
+    };
+
+    if (this.props.category)
+      response.categoria = {
         id_categoria: this.props.category.categoryId,
         nome: this.props.category.name
-      },
-      receita: String(this.props.income),
-      despesa: String(this.props.expense),
-      saldo: String(this.props.balance)
-    };
+      };
+    return response;
   }
 }

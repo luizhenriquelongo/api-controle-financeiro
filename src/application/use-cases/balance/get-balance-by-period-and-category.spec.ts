@@ -7,25 +7,28 @@ import {
 import { CategoryEntity } from '../../../domain/entities/category';
 import { SubCategoryEntity } from '../../../domain/entities/sub-category';
 import { GetBalanceByPeriodAndCategoryUseCase } from './get-balance-by-period-and-category';
+import Decimal from 'decimal.js';
+import { BalanceEntity } from '../../../domain/entities/balance';
+import APIException from '../../exceptions/api.exception';
 
 const loadEntries = (): EntryEntity[] => {
   const storedEntry1 = EntryEntity.create({
     entryId: 1,
-    value: 100,
+    value: new Decimal(100),
     date: new Date(2022, 3, 24),
     subCategoryId: 1,
     comment: 'some comment'
   });
   const storedEntry2 = EntryEntity.create({
     entryId: 2,
-    value: -90,
+    value: new Decimal(-90),
     date: new Date(2022, 3, 25),
     subCategoryId: 2,
     comment: 'some comment'
   });
   const storedEntry3 = EntryEntity.create({
     entryId: 3,
-    value: 50,
+    value: new Decimal(50),
     date: new Date(2022, 3, 26),
     subCategoryId: 3,
     comment: 'some comment'
@@ -81,15 +84,15 @@ describe('Get balance by period and category use case', () => {
       subCategoriesRepository
     );
 
-    const response = await useCase.execute({
+    const response = (await useCase.execute({
       startDate: new Date(2022, 3, 24),
       endDate: new Date(2022, 3, 26),
       categoryId: 1
-    });
+    })) as BalanceEntity;
 
-    expect(response.props.expense).toBe(-90);
-    expect(response.props.income).toBe(100);
-    expect(response.props.balance).toBe(10);
+    expect(response.props.expense).toStrictEqual(new Decimal(-90));
+    expect(response.props.income).toStrictEqual(new Decimal(100));
+    expect(response.props.balance).toStrictEqual(new Decimal(10));
     expect(response.props.category).toStrictEqual({
       categoryId: 1,
       name: 'Category 1'
@@ -110,18 +113,41 @@ describe('Get balance by period and category use case', () => {
       subCategoriesRepository
     );
 
-    const response = await useCase.execute({
+    const response = (await useCase.execute({
       startDate: new Date(2022, 3, 25),
       endDate: new Date(2022, 3, 26),
       categoryId: 1
-    });
+    })) as BalanceEntity;
 
-    expect(response.props.expense).toBe(-90);
-    expect(response.props.income).toBe(0);
-    expect(response.props.balance).toBe(-90);
+    expect(response.props.expense).toStrictEqual(new Decimal(-90));
+    expect(response.props.income).toStrictEqual(new Decimal(0));
+    expect(response.props.balance).toStrictEqual(new Decimal(-90));
     expect(response.props.category).toStrictEqual({
       categoryId: 1,
       name: 'Category 1'
     });
+  });
+
+  it('should return an error if filtered category does not exist', async () => {
+    const entriesRepository = await getInMemoryEntriesRepository(loadEntries());
+    const categoriesRepository = await getInMemoryCategoriesRepository(
+      loadCategories()
+    );
+    const subCategoriesRepository = await getInMemorySubCategoriesRepository(
+      loadSubCategories()
+    );
+    const useCase = new GetBalanceByPeriodAndCategoryUseCase(
+      entriesRepository,
+      categoriesRepository,
+      subCategoriesRepository
+    );
+
+    const response = await useCase.execute({
+      startDate: new Date(2022, 3, 25),
+      endDate: new Date(2022, 3, 26),
+      categoryId: 3
+    });
+
+    expect(response).toBeInstanceOf(APIException);
   });
 });
