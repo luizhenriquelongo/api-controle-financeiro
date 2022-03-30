@@ -63,17 +63,12 @@ class Server {
     });
   }
 }
+const initServer = async () => {
+  await postgresDataSource.initialize();
+  await postgresDataSource.runMigrations();
 
-postgresDataSource
-  .initialize()
-  .then(() => {
-    // eslint-disable-next-line no-console
-    console.log('Data Source has been initialized!');
-  })
-  .catch((err) => {
-    // eslint-disable-next-line no-console
-    console.error('Error during Data Source initialization:', err);
-  });
+  const server = new Server();
+  server.start();
+};
 
-const server = new Server();
-server.start();
+initServer();

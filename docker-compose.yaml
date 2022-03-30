@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  postgresdb:
+    container_name: "postgresDB"
+    image: "postgres"
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_persdata:/var/lib/postgrespers
+    env_file: .env
+    networks:
+      - default
+  node:
+    container_name: "api-controle-financeiro"
+    build: .
+    env_file: .env
+    volumes:
+      - ./:/home/node/app
+    depends_on:
+      - postgresdb
+    ports:
+      - "3000:3000"
+    networks:
+      - default
+    command: "npm start"
+networks:
+  default:
+volumes:
+  db_persdata : {}

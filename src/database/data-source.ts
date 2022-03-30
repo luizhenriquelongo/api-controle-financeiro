@@ -15,7 +15,7 @@ export const postgresDataSource = new DataSource({
   username: TYPEORM_USERNAME,
   password: TYPEORM_PASSWORD,
   database: TYPEORM_DATABASE,
-  entities: ['src/database/entities/*.ts'],
+  entities: ['build/src/database/entities/*.js'],
   logging: true,
-  migrations: ['src/database/migrations/*.ts']
+  migrations: ['build/src/database/migrations/*.js']
 });
